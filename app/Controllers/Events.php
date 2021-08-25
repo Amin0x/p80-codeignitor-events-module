@@ -5,11 +5,9 @@ namespace App\Controllers;
 class Events extends BaseController
 {
     public function __construct() {
-        parent::__construct();
+        //parent::__construct();
 
-        $this->load->helper('url');
-        $this->load->model('eventmodel');
-        $this->load->library("pagination");
+        
     }
 
 	public function index()
@@ -41,7 +39,19 @@ class Events extends BaseController
 
     public function add()
     {
-        return view('event_add');
+        $category = new \App\Models\EventCategoryModel();
+        $classification = new \App\Models\EventClassificationModel();
+        $ev_kpis = new \App\Models\EventKpisModel();
+        $ev_status = new \App\Models\EventStatusModel();
+
+        $data = [
+            'category' => $category->findAll(50),
+            'classification' => $classification->findAll(50),
+            'ev_kpis' => $ev_kpis->findAll(50),
+            'ev_status' => $ev_status->findAll(50),
+        ];
+
+        return view('event_add', $data);
     }
 
     public function edit()

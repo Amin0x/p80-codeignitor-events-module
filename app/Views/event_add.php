@@ -1,3 +1,4 @@
+<?php print_r($ev_status); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/aamain.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/aamain.css">
 </head>
 <body style="background-color: #f7f7f7;">
     <div class="container">
@@ -55,11 +56,25 @@
                             <div class="form-group mt-2">
                                 <label for="category">Category</label>
                                 <select type="text" class="form-control" name="category" id="category" aria-describedby="helpId" placeholder="">
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
+                                    <?php foreach ($category as $value): ?>
+                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+                                    <?php endforeach; ?>                                   
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Status</label>
+                                <select type="text" class="form-control" name="status"  aria-describedby="helpId" placeholder="">
+                                    <?php foreach ($ev_status as $value): ?>
+                                    <option value="<?php echo $value['id'];?>"><?php echo $value['status_name'];?></option>
+                                    <?php endforeach; ?>   
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Classification</label>
+                                <select type="text" class="form-control" name="event_classification"  aria-describedby="helpId" placeholder="">
+                                    <?php foreach ($classification as $value): ?>
+                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
+                                    <?php endforeach; ?>   
                                 </select>
                             </div>
 
