@@ -35,6 +35,9 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Events::index');
 $routes->get('events/', 'Events::index');
 $routes->get('events/add', 'Events::add');
+$routes->post('events/add', 'Events::addAjax');
+$routes->get('events/pki', 'Events::listPki');
+$routes->post('events/pki', 'Events::addPkiAjax');
 
 /*
  * --------------------------------------------------------------------

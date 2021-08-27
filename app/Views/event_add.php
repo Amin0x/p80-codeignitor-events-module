@@ -12,7 +12,8 @@
 </head>
 <body style="background-color: #f7f7f7;">
     <div class="container">
-        <form action="" method="post" class="d-block" id="myForm">
+        <form action="/events/add" method="post" class="d-block" id="myForm">
+        <?= csrf_field() ?>
             <div class="title"><h1>Create Event</h1></div>
             <div class="row">
                 <div class="col-md-6">
@@ -77,28 +78,14 @@
                                     <?php endforeach; ?>   
                                 </select>
                             </div>
-
-                            <div class="mt-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                                    <label class="form-check-label" for="exampleRadios1">
-                                      Default radio
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option1" checked>
-                                    <label class="form-check-label" for="exampleRadios2">
-                                      Default radio
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option1" checked>
-                                    <label class="form-check-labe" for="exampleRadios3">
-                                      Default radio
-                                    </label>
-                                </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Connected to tech</label>
+                                <select type="text" class="form-control" name="connected_tech"  aria-describedby="helpId" placeholder="">
+                                    <option value="no">no</option>
+                                    <option value="yes">yes</option>
+                                </select>
                             </div>
-                            
+                                                        
                             <div class="form-group mt-2">
                               <label for="">Manager Name</label>
                               <input type="text" class="form-control" name="manager_name" id="managerName" aria-describedby="helpId" placeholder="">
@@ -119,7 +106,7 @@
                             <div class="aa-kpi-wrapper row" id="kpiWrapper">
                                 <div class="form-group col-md-6 mb-3">
                                   <label for="kpi0">KPI Name</label>
-                                  <input type="text" class="form-control" name="kpi[0]" id="kpi0" aria-describedby="helpId" placeholder="">
+                                  <input type="text" class="form-control" name="kpi[0]" id="kpi0" placeholder="">
                                 </div>
                                 <div class="form-group col-md-6 mb-3">
                                   <label for="kpi0">KPI Value</label>
@@ -135,27 +122,27 @@
                             <h4>Location</h4>
                             <div class="form-group">
                               <label for="">Location</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Location">
+                              <input type="text" class="form-control" name="location"  placeholder="Location">
                             </div>
                             <div class="form-group">
                               <label for="">State</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="State">
+                              <input type="text" class="form-control" name="state" placeholder="State">
                             </div>
                             <div class="form-group">
                               <label for="">City</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="City">
+                              <input type="text" class="form-control" name="city" placeholder="City">
                             </div>
                             <div class="form-group">
                               <label for="">Latitude</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Latitude">
+                              <input type="text" class="form-control" name="latitude" placeholder="Latitude">
                             </div>
                             <div class="form-group">
                               <label for="">Longitude</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Longitude">
+                              <input type="text" class="form-control" name="longitude"  placeholder="Longitude">
                             </div>
                             <div class="form-group">
                               <label for="">Map Region (polygon)</label>
-                              <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Map Region">
+                              <input type="text" class="form-control" name="map_region" placeholder="Map Region">
                             </div>
                         </div>
                     </div>
@@ -169,11 +156,12 @@
         document.addEventListener('DOMContentLoaded', function(e){
 
             var kpi_index = 0;
-            var kpi_list = {};
+            var kpi_list = <?php json_encode($ev_kpis) ?>;
+            var url = '<?php echo base_url('/events/add' )?>';
             
             
             var form = document.getElementById( "myForm" );
-            form.addEventListener( "submit", sendForm);
+            //form.addEventListener( "submit", sendForm);
 
             var addKpi = document.getElementById('addKpiBtn');
             addKpi.addEventListener('click', addKpiField);
@@ -192,7 +180,7 @@
                 var lableVal = document.createElement('lable');
                 var lableNameTxt = document.createTextNode('Kpa Name');
                 var lableValTxt = document.createTextNode('Kpa Value');
-                var input = document.createElement('input');
+                var input = document.createElement('select');
                 var inputVal = document.createElement('input');
                 var hr = document.createElement('hr');
                 
@@ -204,6 +192,13 @@
                 input.className = 'form-control';
                 input.setAttribute('name', 'kpi_name['+ kpi_index +']');
                 formGroup.appendChild(lable);
+
+                for(kpi in kpi_list){
+                    var option  = document.createElement('option');
+                    option.setAttribute('value', kpi.id);
+                    option.appendChild(document.createTextNode(kpi.name));
+                    input.appendChild(option);
+                }
                 formGroup.appendChild(input);
     
                 lableVal.setAttribute('for', '');
@@ -225,23 +220,27 @@
 
                 var validate = validateForm();
                 if(validate == false){
-                    return false;
+                    //return false;
                 }
 
-                const XHR = new XMLHttpRequest();               
+                const xhr = new XMLHttpRequest();               
                 const FD = new FormData( form );
 
-                XHR.addEventListener( "load", function(event) {
-                alert( event.target.responseText );
-                } );
+                xhr.onload = function(event) {
+                    if(xhr.status == 200){
+                        console.log(xhr.response);
+                    }
+                } 
 
-                XHR.addEventListener( "error", function( event ) {
-                alert( 'Oops! Something went wrong.' );
-                } );
+                xhr.onerror = function( event ) {
+                    console.log(event);
+                    alert( 'Oops! Something went wrong.' );
+                } 
 
-                XHR.open( "POST", "https://example.com/cors.php" );
-
-                XHR.send( FD );
+                xhr.open( "POST", url );
+                xhr.setRequestHeader( "Content-Type", "application/json");
+                xhr.setRequestHeader( "X-Requested-With", "XMLHttpRequest");
+                xhr.send( FD );
             }
 
             function validateForm(){
@@ -258,7 +257,7 @@
                 var managerEmail = document.getElementById('managerEmail');
 
                 if(eventName.value == ''){
-                    eventName.style.border = '1px solid red;';
+                    eventName.style.border = '1px solid red';
                 }
                 if(eventNameAr.value == ''){
                     eventNameAr.style.border = '1px solid red';
