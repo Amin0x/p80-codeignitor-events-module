@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/aamain.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="aa-pki-list">
+                    <table class="table">
+                        <thead>                        
+                            <th>PKI Name</th>
+                            <th>Updating Period</th>  
+                            <th>Actions</th>                      
+                        </thead>
+                        <tbody id="aaPKIList">
+                            <tr data-name="Lorem, ipsum dolor." data-id="2" data-sel-id="2">
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr data-name="Lorem, ipsum dolor." data-id="2" data-sel-id="2">
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr data-name="Lorem, ipsum dolor." data-id="2" data-sel-id="2">
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr data-name="Lorem, ipsum dolor." data-id="2" data-sel-id="2">
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>Lorem, ipsum dolor.</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                    <button type="button" class="btn btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="aa-pki-msg"></div>
+                        <div class="aa-pki-form">
+                            <form id="myForm">
+                                <div class="h4">Add New KPI</div>
+                                <div class="form-group">
+                                  <label for=""></label>
+                                  <input type="text" class="form-control" name="pki_name" id="" aria-describedby="helpId" placeholder="PKI Name">
+                                </div>
+                                <div class="form-group mt-0">
+                                  <label for=""></label>
+                                  <select type="text" class="form-control" name="updating_period" id="" aria-describedby="helpId" placeholder="Updating Period">
+                                      <option value="1">Updating Period Dailly</option>
+                                      <option value="2">Updating Period Weekly</option>
+                                  </select>
+                                </div>
+                                <div class="mt-3"><a name="" id="aaAddBtn" class="btn btn-primary" href="#" role="button">Add</a></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit KPI</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="aa-pki-msg"></div>
+                            <div class="aa-pki-form">
+                                <form id="myFormModel">
+                                    <div class="form-group">
+                                      <label for=""></label>
+                                      <input type="text" class="form-control" name="pki_name" id="pkiNameModel" aria-describedby="helpId" placeholder="PKI Name">
+                                    </div>
+                                    <div class="form-group mt-0">
+                                      <label for=""></label>
+                                      <select type="text" class="form-control" name="updating_period" id="updatingPeriodModel" aria-describedby="helpId" placeholder="Updating Period">
+                                          <option value="1">Updating Period Dailly</option>
+                                          <option value="2">Updating Period Weekly</option>
+                                      </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="aaSave">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e){
+
+            var editPkiBtn = document.getElementById('aaAddBtn');
+            aaAddBtn.addEventListener('click', addNewPKI);
+
+            function addNewPKI(e){
+                e.preventDefault();
+                
+                var form = document.getElementById( "myForm" );
+                const xhr = new XMLHttpRequest();               
+                const fd = new FormData( form );
+
+                xhr.addEventListener( "load", function(event) {
+                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
+                    msgBox.innerHTML = '<div class="text-success">PKI successfully added</div>';
+                } );
+
+                xhr.addEventListener( "error", function( event ) {
+                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
+                    msgBox.innerHTML = '<div class="text-danger">Error: Can\'t Add PKI</div>';
+                } );
+
+                xhr.open( "POST", "https://example.com/cors.php" );
+                //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+                xhr.setRequestHeader('Content-Type','application/json');
+                xhr.send( fd );
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e){
+
+            
+            var eles = document.getElementsByClassName('aa-edit-pki');
+            
+            for(i = 0; i < eles.length; i++){
+                eles[i].addEventListener('click', function(e){
+                    //document.getElementById('exampleModal').modal('show');
+                    var tr = e.target.parentNode.parentNode;
+                    var name = tr.cells[0].textContent;
+                    var updatePeriod = tr.getAttribute('data-sel-id');
+
+                    document.getElementById('pkiNameModel').value = name;
+                    var updatingPeriodModel = document.getElementById('updatingPeriodModel');
+                    updatingPeriodModel.value = updatePeriod;
+                    updatingPeriodModel.setAttribute('selected', 'selected');
+
+                    updatePKI(updatePeriod);
+                });
+            }
+            
+
+            function updatePKI(id){                
+
+                var form = document.getElementById( "myFormModel" );
+                const XHR = new XMLHttpRequest();               
+                const FD = new FormData( form );
+
+                XHR.addEventListener( "load", function(event) {
+                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
+                    msgBox.innerHTML = '<div class="text-success">PKI successfully added</div>';
+                } );
+
+                XHR.addEventListener( "error", function( event ) {
+                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
+                    msgBox.innerHTML = '<div class="text-danger">Error: Can\'t Add PKI</div>';
+                } );
+
+                XHR.open( "POST", "https://example.com/cors.php" );
+                //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+                xhr.setRequestHeader('Content-Type','application/json');
+                XHR.send( FD );
+            }
+        });
+    </script>
+</body>
+</html>
