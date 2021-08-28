@@ -33,11 +33,16 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Events::index');
+$routes->get('calender/', 'Events::calender');
 $routes->get('events/', 'Events::index');
 $routes->get('events/add', 'Events::add');
-$routes->post('events/add', 'Events::addAjax');
+$routes->post('events/add', 'Events::addEventAjax');
+$routes->post('events/address', 'Events::addAddressAjax');
 $routes->get('events/pki', 'Events::listPki');
-$routes->post('events/pki', 'Events::addPkiAjax');
+$routes->post('events/pki', 'Events::addKPIAjax');
+$routes->post('events/kpi/del', 'Events::deleteKPIAjax');
+$routes->post('events/eventkpi', 'Events::addKPIToEventAjax');
+
 
 /*
  * --------------------------------------------------------------------

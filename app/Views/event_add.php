@@ -1,23 +1,35 @@
-<?php print_r($ev_status); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.css">
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/aamain.css">
 </head>
+
 <body style="background-color: #f7f7f7;">
     <div class="container">
-        <form action="/events/add" method="post" class="d-block" id="myForm">
-        <?= csrf_field() ?>
-            <div class="title"><h1>Create Event</h1></div>
-            <div class="row">
-                <div class="col-md-6">
+        
+        <div class="title">
+            <h1>Create Event</h1>
+        </div>
+        <div class="row">
+            <div id="aa-error-msg">
 
+            </div>
+            <div class="col-12 p-0">
+                <button class="tablink navBasicTab" id="defaultOpen">Basic</button>
+                <button class="tablink navKpiTab">KPI</button>
+                <button class="tablink navAddressTab">Address</button>
+            </div>
+
+            <div class="col-12 tabcontent" id="basicTab">
+                <form action="/events/add" method="post" class="d-block" id="basicForm">
+                <?= csrf_field() ?>
                     <div class="card">
                         <div class="card-body">
                             <h4>Basic</h4>
@@ -53,241 +65,240 @@
                                 <label for="">Location</label>
                                 <input type="text" class="form-control" name="location" id="location" aria-describedby="helpId" placeholder="location">
                             </div>
-                            
+
                             <div class="form-group mt-2">
                                 <label for="category">Category</label>
                                 <select type="text" class="form-control" name="category" id="category" aria-describedby="helpId" placeholder="">
-                                    <?php foreach ($category as $value): ?>
-                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
-                                    <?php endforeach; ?>                                   
+                                    <?php foreach ($category as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Status</label>
-                                <select type="text" class="form-control" name="status"  aria-describedby="helpId" placeholder="">
-                                    <?php foreach ($ev_status as $value): ?>
-                                    <option value="<?php echo $value['id'];?>"><?php echo $value['status_name'];?></option>
-                                    <?php endforeach; ?>   
+                                <select type="text" class="form-control" name="status" aria-describedby="helpId" placeholder="">
+                                    <?php foreach ($ev_status as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['status_name']; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Classification</label>
-                                <select type="text" class="form-control" name="event_classification"  aria-describedby="helpId" placeholder="">
-                                    <?php foreach ($classification as $value): ?>
-                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name'];?></option>
-                                    <?php endforeach; ?>   
+                                <select type="text" class="form-control" name="event_classification" aria-describedby="helpId" placeholder="">
+                                    <?php foreach ($classification as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Connected to tech</label>
-                                <select type="text" class="form-control" name="connected_tech"  aria-describedby="helpId" placeholder="">
+                                <select type="text" class="form-control" name="connected_tech" aria-describedby="helpId" placeholder="">
                                     <option value="no">no</option>
                                     <option value="yes">yes</option>
                                 </select>
                             </div>
-                                                        
+
                             <div class="form-group mt-2">
-                              <label for="">Manager Name</label>
-                              <input type="text" class="form-control" name="manager_name" id="managerName" aria-describedby="helpId" placeholder="">
+                                <label for="">Manager Name</label>
+                                <input type="text" class="form-control" name="manager_name" id="managerName" aria-describedby="helpId" placeholder="">
                             </div>
                             <div class="form-group mt-2">
-                              <label for="">Manager Email</label>
-                              <input type="text" class="form-control" name="manager_email" id="managerEmail" aria-describedby="helpId" placeholder="">
+                                <label for="">Manager Email</label>
+                                <input type="text" class="form-control" name="manager_email" id="managerEmail" aria-describedby="helpId" placeholder="">
                             </div>
+                            <div class="col-12 mt-2"><button type="button" id="saveEvent" class="btn btn-success">Save Event</button></div>
                         </div>
                     </div>
+                </form>
+            </div>
 
-                    
-                </div>
-                <div class="col-md-6">
+            <div class="col-12 tabcontent" id="kpiTab">
+                <form action="/events/kpi" id="kpiForm">
+                <?= csrf_field() ?>
                     <div class="card">
                         <div class="card-body">
+                            
                             <h4>KPI</h4>
+                            <hr>
+                            <div class="mt-2"><strong>Added KPI to Event:</strong></div>
+                            <table class="table">
+                                <thead>
+                                    <th>KPI Name</th>
+                                    <th>Value</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>test</td>
+                                        <td>test</td>
+                                        <td><button class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div><strong>Add new KPI:</strong></div>
                             <div class="aa-kpi-wrapper row" id="kpiWrapper">
                                 <div class="form-group col-md-6 mb-3">
-                                  <label for="kpi0">KPI Name</label>
-                                  <input type="text" class="form-control" name="kpi[0]" id="kpi0" placeholder="">
+                                    <label for="kpi0">KPI Name</label>
+                                    <select type="text" class="form-control" name="kpi_list" id="kpi0" placeholder="">
+                                        <?php foreach ($ev_kpis as $ev_kpi) : ?>
+                                            <option value="<?php echo $ev_kpi['id']; ?>"><?php echo $ev_kpi['name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                                 <div class="form-group col-md-6 mb-3">
-                                  <label for="kpi0">KPI Value</label>
-                                  <input type="text" class="form-control" name="kpi_val[0]" id="kpiVal0" aria-describedby="helpId" placeholder="">
+                                    <label for="kpi0">KPI Value</label>
+                                    <input type="text" class="form-control" name="kpi_val" id="kpiVal0" placeholder="">
                                 </div>
                                 <hr>
                             </div>
-                            <button type="button" name="add_kpi" id="addKpiBtn" class="btn btn-primary btn-sm">add KPI</button>
+                            <button type="button" name="add_kpi" id="addKpiBtn" class="btn btn-primary">add KPI</button>
                         </div>
                     </div>
+                </form>
+            </div>
+            <div class="col-12 tabcontent" id="addressTab">
+                <form action="/events/address" id="addressForm">
+                <?= csrf_field() ?>
                     <div class="card mt-2">
                         <div class="card-body">
                             <h4>Location</h4>
                             <div class="form-group">
-                              <label for="">Location</label>
-                              <input type="text" class="form-control" name="location"  placeholder="Location">
+                                <label for="">Location</label>
+                                <input type="text" class="form-control" name="location" placeholder="Location">
                             </div>
                             <div class="form-group">
-                              <label for="">State</label>
-                              <input type="text" class="form-control" name="state" placeholder="State">
+                                <label for="">State</label>
+                                <input type="text" class="form-control" name="state" placeholder="State">
                             </div>
                             <div class="form-group">
-                              <label for="">City</label>
-                              <input type="text" class="form-control" name="city" placeholder="City">
+                                <label for="">City</label>
+                                <input type="text" class="form-control" name="city" placeholder="City">
                             </div>
                             <div class="form-group">
-                              <label for="">Latitude</label>
-                              <input type="text" class="form-control" name="latitude" placeholder="Latitude">
+                                <label for="">Latitude</label>
+                                <input type="text" class="form-control" name="latitude" placeholder="Latitude">
                             </div>
                             <div class="form-group">
-                              <label for="">Longitude</label>
-                              <input type="text" class="form-control" name="longitude"  placeholder="Longitude">
+                                <label for="">Longitude</label>
+                                <input type="text" class="form-control" name="longitude" placeholder="Longitude">
                             </div>
                             <div class="form-group">
-                              <label for="">Map Region (polygon)</label>
-                              <input type="text" class="form-control" name="map_region" placeholder="Map Region">
+                                <label for="">Map Region (polygon)</label>
+                                <input type="text" class="form-control" name="map_region" placeholder="Map Region">
+                            </div>
+                            <div class="mt-2">
+                                <button type="button" id="saveAddress" class="btn btn-primary">Save</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 mt-2"><button type="submit" class="btn btn-success">Send</button></div>
+                </form>
             </div>
-        </form>
+
+        </div>
+
     </div>
-    <script src="js/bootstrap.bundle.js"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function(e){
+        var index = 0;
+        var eventId = '<?php echo $event_id; ?>';
+        var baseUrl = '<?php echo base_url(); ?>';
 
-            var kpi_index = 0;
-            var kpi_list = <?php json_encode($ev_kpis) ?>;
-            var url = '<?php echo base_url('/events/add' )?>';
-            
-            
-            var form = document.getElementById( "myForm" );
-            //form.addEventListener( "submit", sendForm);
 
-            var addKpi = document.getElementById('addKpiBtn');
-            addKpi.addEventListener('click', addKpiField);
-    
-            function addKpiField(e){
+        $(function(e) {
+
+            $('#addKpiBtn').on('click', function(e) {
                 e.preventDefault();
-                
-                
-                kpi_index++;
-    
-                var kpiWrapper = document.getElementById('kpiWrapper');
-
-                var formGroup = document.createElement('div');
-                var formGroupVal = document.createElement('div');
-                var lable = document.createElement('lable');
-                var lableVal = document.createElement('lable');
-                var lableNameTxt = document.createTextNode('Kpa Name');
-                var lableValTxt = document.createTextNode('Kpa Value');
-                var input = document.createElement('select');
-                var inputVal = document.createElement('input');
-                var hr = document.createElement('hr');
-                
-                formGroup.className = 'form-group col-md-6 mb-3';
-                formGroupVal.className = 'form-group col-md-6 mb-3';
-                
-                lable.setAttribute('for', '');
-                lable.appendChild(lableNameTxt);
-                input.className = 'form-control';
-                input.setAttribute('name', 'kpi_name['+ kpi_index +']');
-                formGroup.appendChild(lable);
-
-                for(kpi in kpi_list){
-                    var option  = document.createElement('option');
-                    option.setAttribute('value', kpi.id);
-                    option.appendChild(document.createTextNode(kpi.name));
-                    input.appendChild(option);
+                if (eventId == undefined || eventId == 0) {
+                    $('#aa-error-msg').html('<div class="alert alert-danger" role="alert">Save the Event First!</div>');
+                    return false;
                 }
-                formGroup.appendChild(input);
-    
-                lableVal.setAttribute('for', '');
-                lableVal.appendChild(lableValTxt);
-                inputVal.className = 'form-control';
-                inputVal.setAttribute('name', 'kpi_val['+ kpi_index +']');
-                formGroupVal.appendChild(lableVal);
-                formGroupVal.appendChild(inputVal);           
-                
-                kpiWrapper.appendChild(formGroup);
-                kpiWrapper.appendChild(formGroupVal);
-                kpiWrapper.appendChild(hr);
-    
-                
-            }
+                $.post({
+                    url: baseUrl + '/events/kpi',
+                    data: $('#kpiForm').serialize() + '&event_id=' + eventId,
+                    dataType: 'json',
+                    success: function(data, textStatus) {
+                        console.log(data);
+                        $('#aa-error-msg').html('<div class="alert alert-success" role="alert">KPI Saved successfully!</div>');
+                    },
+                });
+            });
 
-            function sendForm(e){
+            $('#saveEvent').on('click', function(e) {
+
+                $.post({
+                    url: baseUrl + '/events/add',
+                    data: $('#basicForm').serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        if(data.success == true){
+                            eventId = data.id;
+                            $('#aa-error-msg').html('<div class="alert alert-success" role="alert">Event Saved successfully!</div>');
+
+                        } else {
+                            $('#aa-error-msg').html('<div class="alert alert-danger" role="alert">'+ data.msg +'</div>');
+                        }
+                    },
+                });
+            });
+
+            $('#saveAddress').on('click', function(e) {
                 e.preventDefault();
+                if (eventId == undefined || eventId == 0) {
+                    $('.aa-error-msg').html('<div class="alert alert-danger" role="alert">Save the Event First!</div>');
+                    return false;
+                }
+                $.post({
+                    url: baseUrl + "/events/address",
+                    data: $('#addressForm').serialize() + '&event_id=' + eventId,
+                    dataType: 'json',
+                    success: function(data) {
+                        $('.aa-error-msg').html('<div class="alert alert-success" role="alert">Address Saved successfully!</div>');
+                    },
+                });
+            });
 
-                var validate = validateForm();
-                if(validate == false){
-                    //return false;
-                }
+            $('.tablink.navBasicTab').on('click', function(e){
+                openPage('basicTab', $(this));
+            });
+            $('.tablink.navKpiTab').on('click', function(e){
+                openPage('kpiTab', $(this));
+            });
+            $('.tablink.navAddressTab').on('click', function(e){
+                openPage('addressTab', $(this));
+            });
 
-                const xhr = new XMLHttpRequest();               
-                const FD = new FormData( form );
-
-                xhr.onload = function(event) {
-                    if(xhr.status == 200){
-                        console.log(xhr.response);
-                    }
-                } 
-
-                xhr.onerror = function( event ) {
-                    console.log(event);
-                    alert( 'Oops! Something went wrong.' );
-                } 
-
-                xhr.open( "POST", url );
-                xhr.setRequestHeader( "Content-Type", "application/json");
-                xhr.setRequestHeader( "X-Requested-With", "XMLHttpRequest");
-                xhr.send( FD );
-            }
-
-            function validateForm(){
-
-                var eventName = document.getElementById('eventName');
-                var eventNameAr = document.getElementById('eventNameAr');
-                var description = document.getElementById('description');
-                var descriptionAr = document.getElementById('descriptionAr');
-                var startDate = document.getElementById('startDate');
-                var endDate = document.getElementById('endDate');
-                var location = document.getElementById('location');
-                var category = document.getElementById('category');
-                var managerName = document.getElementById('managerName');
-                var managerEmail = document.getElementById('managerEmail');
-
-                if(eventName.value == ''){
-                    eventName.style.border = '1px solid red';
-                }
-                if(eventNameAr.value == ''){
-                    eventNameAr.style.border = '1px solid red';
-                }
-                if(description.value == ''){
-                    description.style.border = '1px solid red';
-                }
-                if(descriptionAr.value == ''){
-                    descriptionAr.style.border = '1px solid red';
-                }
-                if(startDate.value == ''){
-                    startDate.style.border = '1px solid red';
-                }
-                if(endDate.value == ''){
-                    endDate.style.border = '1px solid red';
-                }
-                if(location.value == ''){
-                    location.style.border = '1px solid red';
-                }
-                if(category.value == ''){
-                    category.style.border = '1px solid red';
-                }
-                if(managerName.value == ''){
-                    managerName.style.border = '1px solid red';
-                }
-                if(managerEmail.value == ''){
-                    managerEmail.style.border = '1px solid red';
-                }
-            }
+            $("#defaultOpen").click();
         });
     </script>
+
+    <script>
+        function openPage(pageName, elmnt) {
+            
+            // Hide all elements with class="tabcontent" by default */
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove the background color of all tablinks/buttons
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+
+            // Add the specific color to the button used to open the tab content
+            elmnt.style.backgroundColor = '#eaeaff';
+            elmnt.style.color = '#000';
+        }
+
+        
+    </script>
 </body>
+
 </html>

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\Model;
+use Config\App;
 
 class Events extends BaseController
 {
@@ -16,7 +18,41 @@ class Events extends BaseController
 		
         $model = new \App\Models\EventModel();
 
+        if($this->request->getVar('category')){
+            $model->where('category_id', $this->request->getVar('category'));
+        }
+        
+        if($this->request->getVar('enabled')){
+            $model->where('enabled', $this->request->getVar('enabled'));
+        }
+
+        if($this->request->getVar('classification')){
+            $model->where('classification_id', $this->request->getVar('classification'));
+        }
+
+        if($this->request->getVar('tech')){
+            $model->where('connected_tech', $this->request->getVar('tech'));
+        }
+
+        if($this->request->getVar('staus')){
+            $model->where('staus_id', $this->request->getVar('staus'));
+        }
+
+        if($this->request->getVar('region')){
+            $model->where('region', $this->request->getVar('region'));
+        }
+
+        if($this->request->getVar('state')){
+            $model->where('state', $this->request->getVar('state'));
+        }
+
+        if($this->request->getVar('city')){
+            $model->where('city', $this->request->getVar('city'));
+        }
+            
+
         $data = [
+            'page_title' => 'Events',
             'events' => $model->paginate(10),
             'pager' => $model->pager,
         ];
@@ -25,11 +61,16 @@ class Events extends BaseController
         return view('event_list', $data);
 	}
 
+    public function calender()
+    {
+        return view('calender_event');
+    }
+
     public function add()
     {
         $category = new \App\Models\EventCategoryModel();
         $classification = new \App\Models\EventClassificationModel();
-        $ev_kpis = new \App\Models\EventKpisModel();
+        $ev_kpis = new \App\Models\MetasModel();
         $ev_status = new \App\Models\EventStatusModel();
 
         $data = [
@@ -37,13 +78,28 @@ class Events extends BaseController
             'classification' => $classification->findAll(50),
             'ev_kpis' => $ev_kpis->findAll(50),
             'ev_status' => $ev_status->findAll(50),
+            'event_id' => 0,
         ];
 
         return view('event_add', $data);
     }
 
-    public function addAjax()
+    public function addEventAjax()
     {    
+        $rules = [
+            'event_name' => [ 'lable' => 'Event Name', 'rules' => 'required'],
+            'description' => [ 'lable' => 'Description', 'rules' => 'required'],
+            'end_date' => [ 'lable' => 'End Date', 'rules' => 'required'],
+            'start_date' => [ 'lable' => 'Start Date', 'rules' => 'required'],
+            'manager_name' => [ 'lable' => 'Manger Name', 'rules' => 'required'],
+            'manager_email' => [ 'lable' => 'Manager Name', 'rules' => 'required|valid_email'],
+        ];
+
+
+        if(! $this->validate($rules)){
+            return $this->response->setJSON(['success' => false, 'msg' => 'Error: Invalid Inputs',]);
+        }
+
         $data = [
             'title' =>  $this->request->getVar('event_name'),
             'tite_ar' =>  $this->request->getVar('event_name_ar'),
@@ -57,7 +113,33 @@ class Events extends BaseController
             'connected_tech' =>  $this->request->getVar('connected_tech'),
             'staus_id' =>  $this->request->getVar('status'),
             'manager_name' =>  $this->request->getVar('manager_name'),
-            'manager_email' =>  $this->request->getVar('manager_email'),
+            'manager_email' =>  $this->request->getVar('manager_email'),           
+        ];
+        
+        $model = new \App\Models\EventModel();
+
+        $id = $model->insert($data);
+
+        if($id){
+
+            $res_data = [
+                'success' => true,
+                'msg' => 'success',
+                'event' => $id,
+            ];
+            return $this->response->setJSON($res_data);
+        }
+        
+        $resp = [
+            'success' => false,
+            'msg' => 'failed',            
+        ];
+        return $this->response->setJSON($resp);
+    }
+
+    public function addAddressAjax(){
+
+        $data = [
             'location' =>  $this->request->getVar('location'),
             'latitude' =>  $this->request->getVar('latitude'),
             'longitude' =>  $this->request->getVar('longitude'),
@@ -66,21 +148,45 @@ class Events extends BaseController
             'city' =>  $this->request->getVar('city'),
             'map_region' =>  $this->request->getVar('map_region'),
         ];
-        
-        $model = new \App\Models\EventModel();
 
-        $id = $model->insert($data);
-
-        $res_data = [
-            'event' => $id? $model->find($id) : '',
-        ];
-
-        return $this->response->setJSON($res_data);
+        return '';
     }
 
-    public function addPkiAjax()
+    public function addKPIToEventAjax(){
+        $rules = [];
+        if(! $this->validate($rules)){
+            return $this->response->setJSON(['success' => false, 'msg' => $this->validator->listErrors(),]);
+        }
+
+        $data = [
+            'event_id' => $this->request->getVar('event_id'),
+            'kpi_id' => $this->request->getVar('kpi_id'),
+            'kpi_value' => $this->request->getVar('kpi_value'),
+            'update_date' => date('d m Y H:i:s'),
+            'user_id' => 'NULL',
+        ];
+
+        $kips_model = new \App\Models\EventMetaModel();
+
+        if( $kips_model->save($data) ){
+            $resp = [
+                'success' => true,
+                'msg' => 'success',
+                'id' => $kips_model->id,
+            ];
+            return $this->response->setJSON($resp);
+        }
+        
+        $resp = [
+            'success' => false,
+            'msg' => 'error',               
+        ];
+        return $this->response->setJSON($resp);
+    }
+
+    public function addKPIAjax()
     {    
-        $kpis = new \App\Models\EventKpisModel();
+        $kpis = new \App\Models\MetasModel();
 
         $data = [
             'name' => $this->request->getPost('pki_name'),
@@ -135,7 +241,7 @@ class Events extends BaseController
         return view('event_edit');
     }
 
-    public function deleteEvent($event = null)
+    public function deleteEventAjax($event = null)
     {
         
     }
@@ -145,6 +251,19 @@ class Events extends BaseController
         # code...
     }
 
+    public function deleteKPIAjax(){
+        $model = new \App\Models\EventMetaModel();
+        $id = $this->request->getPost('id');
+        $model->where('id', $id)->delete();
+
+        $resp = [
+            'success' => true,
+            'msg' => 'success',
+        ];
+
+        return $this->response->setJSON($resp);
+    }
+    
     public function test($var = null)
     {
         # code...
