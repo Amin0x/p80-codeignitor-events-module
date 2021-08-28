@@ -36,12 +36,80 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <div class="aa-fillter">
-                            add filter here
-                        </div>
+                        
                         <div class="mt-2"><a href="/events/add" class="btn btn-success">add event</a></div>
                         <hr>
                         <br>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>
+                                        category
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="2">long text option</option>
+                                            <option value="2">long text option</option>
+                                            <option value="2">long text option</option>
+                                            <option value="2">long text option</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        classification
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="1">some option</option>
+                                            <option value="1">some option</option>
+                                            <option value="1">some option</option>
+                                            <option value="1">some option</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        staus
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="4">other opt</option>
+                                            <option value="4">other opt</option>
+                                            <option value="4">other opt</option>
+                                            <option value="4">other opt</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        city
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        region
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        state
+                                        <br>
+                                        <select class="form-select" name="" id="">
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                            <option value="87">more opt</option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        <a name="" id="" class="btn btn-primary" href="#" role="button">Apply</a>
+                                    </th>
+                                   
+                                </thead>
+                            </table>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -70,10 +138,10 @@
                                             <!-- <td><?php echo $event['description']; ?></td> -->
                                             <td><?php echo $event['start_date']; ?></td>
                                             <td><?php echo $event['end_date']; ?></td>
-                                            <td><?php echo $event['category_id']; ?></td>
-                                            <td><?php echo $event['classification_id']; ?></td>
+                                            <td><?php echo $event['category_name']; ?></td>
+                                            <td><?php echo $event['classification']; ?></td>
                                             <!-- <td><?php echo $event['connected_tech']; ?></td> -->
-                                            <td><?php echo $event['staus_id']; ?></td>
+                                            <td><?php echo $event['status_name']; ?></td>
                                             <!-- <td><?php echo $event['manager_name']; ?></td> -->
                                             <td><?php echo $event['location']; ?></td>
                                             <!-- <td><?php echo $event['latitude']; ?></td> -->

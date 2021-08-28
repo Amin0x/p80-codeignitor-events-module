@@ -18,6 +18,11 @@ class Events extends BaseController
 		
         $model = new \App\Models\EventModel();
 
+        $model->select('`events`.*, event_category.name as category_name, event_classification.name as classification, event_status.status_name as status_name');
+        $model->join('event_category', 'event_category.id = `events`.category_id');
+        $model->join('event_classification', 'event_classification.id = `events`.classification_id');
+        $model->join('event_status', 'event_status.id = `events`.staus_id');
+        
         if($this->request->getVar('category')){
             $model->where('category_id', $this->request->getVar('category'));
         }
