@@ -208,12 +208,12 @@ class Events extends BaseController
     public function listPki()
     {    
         $db = \Config\Database::connect();
-        $kpis = $db->query("SELECT event_kpis.id, event_kpis.name, event_kpis.frequent_update as frequent_update_id,
-         event_kpis.input_type as input_type_id, pki_update_ref.name as update_type, pki_update_ref.name_ar as update_type_ar,
+        $kpis = $db->query("SELECT metas.id, metas.name, metas.frequent_update as frequent_update_id,
+         metas.input_type as input_type_id, pki_update_ref.name as update_type, pki_update_ref.name_ar as update_type_ar,
          pki_input_ref.name as input_type, pki_input_ref.name_ar as input_type_ar
-        FROM event_kpis
-        LEFT JOIN pki_update_ref ON (event_kpis.frequent_update = pki_update_ref.id )
-        LEFT JOIN pki_input_ref ON (event_kpis.input_type = pki_input_ref.id )");
+        FROM metas
+        LEFT JOIN pki_update_ref ON (metas.frequent_update = pki_update_ref.id )
+        LEFT JOIN pki_input_ref ON (metas.input_type = pki_input_ref.id )");
         
         $pki_input_ref = $db->query('SELECT * FROM pki_input_ref');
         $pki_update_ref = $db->query('SELECT * FROM pki_update_ref');
