@@ -17,19 +17,19 @@
         <div class="title">
             <h1>Create Event</h1>
         </div>
-            <form action="<?= base_url() ?>/events/create" method="post" id="basicForm">
-            <?= csrf_field() ?>
-            <div class="row" id="aa-error-msg">
+        <div class="row">
+            <div id="aa-error-msg">
 
             </div>
-        <div class="row">
             <div class="col-12 p-0">
-                <button type="button" class="tablink" id="navBasicTab">Basic</button>
-                <button type="button" class="tablink" id="navAddressTab">Address</button>
-                <button type="button" class="tablink" id="navKpiTab">Event KPI</button>
+                <button class="tablink navBasicTab" id="defaultOpen">Basic</button>
+                <button class="tablink navKpiTab">KPI</button>
+                <button class="tablink navAddressTab">Address</button>
             </div>
 
             <div class="col-12 tabcontent" id="basicTab">
+                <form action="/events/add" method="post" class="d-block" id="basicForm">
+                <?= csrf_field() ?>
                     <div class="card">
                         <div class="card-body">
                             <h4>Basic</h4>
@@ -43,11 +43,11 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" name="description" id="description" rows="6" aria-describedby="helpId" placeholder="description"></textarea>
+                                <textarea class="form-control" name="description" id="description" row="6" aria-describedby="helpId" placeholder="description"></textarea>
                             </div>
                             <div class="form-group mt-2">
                                 <label for="descriptionAr">وصف الفعالية</label>
-                                <textarea class="form-control" name="description_ar" id="descriptionAr" rows="6" aria-describedby="helpId" placeholder="description"></textarea>
+                                <textarea class="form-control" name="description_ar" id="descriptionAr" row="6" aria-describedby="helpId" placeholder="description"></textarea>
                             </div>
                             <div class="form-group mt-2">
                                 <div class="row">
@@ -63,12 +63,12 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="">Location</label>
-                                <input type="text" class="form-control" name="location" id="location" placeholder="location">
+                                <input type="text" class="form-control" name="location" id="location" aria-describedby="helpId" placeholder="location">
                             </div>
 
                             <div class="form-group mt-2">
                                 <label for="category">Category</label>
-                                <select class="form-control" name="category" id="category">
+                                <select type="text" class="form-control" name="category" id="category" aria-describedby="helpId" placeholder="">
                                     <?php foreach ($category as $value) : ?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                     <?php endforeach; ?>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Status</label>
-                                <select class="form-control" name="status">
+                                <select type="text" class="form-control" name="status" aria-describedby="helpId" placeholder="">
                                     <?php foreach ($ev_status as $value) : ?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['status_name']; ?></option>
                                     <?php endforeach; ?>
@@ -84,7 +84,7 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Classification</label>
-                                <select class="form-control" name="event_classification">
+                                <select type="text" class="form-control" name="event_classification" aria-describedby="helpId" placeholder="">
                                     <?php foreach ($classification as $value) : ?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                     <?php endforeach; ?>
@@ -92,7 +92,7 @@
                             </div>
                             <div class="form-group mt-2">
                                 <label for="status">Connected to tech</label>
-                                <select class="form-control" name="connected_tech">
+                                <select type="text" class="form-control" name="connected_tech" aria-describedby="helpId" placeholder="">
                                     <option value="no">no</option>
                                     <option value="yes">yes</option>
                                 </select>
@@ -100,38 +100,46 @@
 
                             <div class="form-group mt-2">
                                 <label for="">Manager Name</label>
-                                <input type="text" class="form-control" name="manager_name" id="managerName" placeholder="">
+                                <input type="text" class="form-control" name="manager_name" id="managerName" aria-describedby="helpId" placeholder="">
                             </div>
                             <div class="form-group mt-2">
                                 <label for="">Manager Email</label>
-                                <input type="text" class="form-control" name="manager_email" id="managerEmail" placeholder="">
+                                <input type="text" class="form-control" name="manager_email" id="managerEmail" aria-describedby="helpId" placeholder="">
                             </div>
                             <div class="col-12 mt-2"><button type="button" id="saveEvent" class="btn btn-success">Save Event</button></div>
                         </div>
                     </div>
-                
+                </form>
             </div>
 
             <div class="col-12 tabcontent" id="kpiTab">
+                <form action="/events/kpi" id="kpiForm">
+                <?= csrf_field() ?>
                     <div class="card">
                         <div class="card-body">
                             
                             <h4>KPI</h4>
                             <hr>
                             <div class="mt-2"><strong>Added KPI to Event:</strong></div>
-                            <table class="table" id="kpiTable">
-                            
-                                <th>KPI Name</th>
-                                <th>Value</th>
-                                <th>Remove</th>                         
-                               
+                            <table class="table">
+                                <thead>
+                                    <th>KPI Name</th>
+                                    <th>Value</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>test</td>
+                                        <td>test</td>
+                                        <td><button class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button></td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <hr>
                             <div><strong>Add new KPI:</strong></div>
                             <div class="aa-kpi-wrapper row" id="kpiWrapper">
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="kpi0">KPI Name</label>
-                                    <select class="form-control" name="kpi_list" id="kpiName">
+                                    <select type="text" class="form-control" name="kpi_list" id="kpi0" placeholder="">
                                         <?php foreach ($ev_kpis as $ev_kpi) : ?>
                                             <option value="<?php echo $ev_kpi['id']; ?>"><?php echo $ev_kpi['name']; ?></option>
                                         <?php endforeach; ?>
@@ -139,15 +147,18 @@
                                 </div>
                                 <div class="form-group col-md-6 mb-3">
                                     <label for="kpi0">KPI Value</label>
-                                    <input type="text" class="form-control" name="kpi_val" id="kpiVal" placeholder="Value">
+                                    <input type="text" class="form-control" name="kpi_val" id="kpiVal0" placeholder="">
                                 </div>
                                 <hr>
                             </div>
                             <button type="button" name="add_kpi" id="addKpiBtn" class="btn btn-primary">add KPI</button>
                         </div>
                     </div>
+                </form>
             </div>
             <div class="col-12 tabcontent" id="addressTab">
+                <form action="/events/address" id="addressForm">
+                <?= csrf_field() ?>
                     <div class="card mt-2">
                         <div class="card-body">
                             <h4>Location</h4>
@@ -176,13 +187,14 @@
                                 <input type="text" class="form-control" name="map_region" placeholder="Map Region">
                             </div>
                             <div class="mt-2">
+                                <button type="button" id="saveAddress" class="btn btn-primary">Save</button>
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
 
         </div>
-            </form>
 
     </div>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
@@ -193,27 +205,29 @@
         var baseUrl = '<?php echo base_url(); ?>';
 
 
-        $(document).ready(function() {
+        $(function(e) {
 
             $('#addKpiBtn').on('click', function(e) {
                 e.preventDefault();
-                var kpiName = $('#kpiName option:selected').text();
-                var kpiNameVal = $('#kpiName option:selected').val();
-                var kpiVal = $('#kpiVal').val();
-                
-                $("#kpiTable tbody").append("<tr><td>"+kpiName+"</td><td>"+kpiVal+"</td><td><input type=\"hidden\" name=\"kpiname[]\" value=\""+kpiNameVal+"\"><input type=\"hidden\" name=\"kpival[]\" value=\""+kpiVal+"\"><button  type=\"button\" class=\"btn btn-danger btn-sm aa-remove-kpi\"><i class=\"far fa-trash-alt\"></i></button></td></tr>");
-            });
-
-            $('.aa-remove-kpi').on('click', function(e) {
-                e.preventDefault();
-                $(this).closest('tr').remove();
-
-            });
-
-            $('#basicForm').on('submit', function(e) {
-                e.preventDefault();
+                if (eventId == undefined || eventId == 0) {
+                    $('#aa-error-msg').html('<div class="alert alert-danger" role="alert">Save the Event First!</div>');
+                    return false;
+                }
                 $.post({
-                    url: baseUrl + '/events/create',
+                    url: baseUrl + '/events/kpi',
+                    data: $('#kpiForm').serialize() + '&event_id=' + eventId,
+                    dataType: 'json',
+                    success: function(data, textStatus) {
+                        console.log(data);
+                        $('#aa-error-msg').html('<div class="alert alert-success" role="alert">KPI Saved successfully!</div>');
+                    },
+                });
+            });
+
+            $('#saveEvent').on('click', function(e) {
+
+                $.post({
+                    url: baseUrl + '/events/add',
                     data: $('#basicForm').serialize(),
                     dataType: 'json',
                     success: function(data) {
@@ -229,46 +243,62 @@
                 });
             });
 
-            
-            function openPage(pageName, elmnt) {
-            
-                // Hide all elements with class="tabcontent" by default */
-                var i, tabcontent, tablinks;
-                tabcontent = $(".tabcontent");            
-                tabcontent.hide();
-                
-
-                // Remove the background color of all tablinks/buttons
-                tablinks = $(".tablink");
-                tablinks.css("background-color", "");
-
-                // Show the specific tab content
-                $(pageName).show();
-
-                // Add the specific color to the button used to open the tab content
-                elmnt.css("background-color", "#eaeaff");
-                elmnt.css("color", "#000");
-            }
-
-            $('#navBasicTab').on('click', function(e){
+            $('#saveAddress').on('click', function(e) {
                 e.preventDefault();
-                openPage('#basicTab', $(this));
-            });
-            $('#navKpiTab').on('click', function(e){
-                e.preventDefault();
-                openPage('#kpiTab', $(this));
-            });
-            $('#navAddressTab').on('click', function(e){
-                e.preventDefault();
-                openPage('#addressTab', $(this));
+                if (eventId == undefined || eventId == 0) {
+                    $('.aa-error-msg').html('<div class="alert alert-danger" role="alert">Save the Event First!</div>');
+                    return false;
+                }
+                $.post({
+                    url: baseUrl + "/events/address",
+                    data: $('#addressForm').serialize() + '&event_id=' + eventId,
+                    dataType: 'json',
+                    success: function(data) {
+                        $('.aa-error-msg').html('<div class="alert alert-success" role="alert">Address Saved successfully!</div>');
+                    },
+                });
             });
 
-            $("#navBasicTab").click();
+            $('.tablink.navBasicTab').on('click', function(e){
+                openPage('basicTab', $(this));
+            });
+            $('.tablink.navKpiTab').on('click', function(e){
+                openPage('kpiTab', $(this));
+            });
+            $('.tablink.navAddressTab').on('click', function(e){
+                openPage('addressTab', $(this));
+            });
 
+            $("#defaultOpen").click();
         });
     </script>
 
-    
+    <script>
+        function openPage(pageName, elmnt) {
+            
+            // Hide all elements with class="tabcontent" by default */
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove the background color of all tablinks/buttons
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+
+            // Add the specific color to the button used to open the tab content
+            elmnt.style.backgroundColor = '#eaeaff';
+            elmnt.style.color = '#000';
+        }
+
+        
+    </script>
 </body>
 
 </html>

@@ -68,10 +68,27 @@ class Events extends BaseController
 
     public function calender()
     {
+       
         return view('calender_event');
     }
+    public function calenderAjax()
+    {
+        
+        $model = new \App\Models\EventModel();
+        $model->select('id, title, end_date, start_date');
+        if($this->request->getVar('start')){
+            $model->where('start_date >=', $this->request->getVar('start'));
+        }
+    
+        if($this->request->getVar('end')){
+            $model->where('end_date <=', $this->request->getVar('end'));
+        }
 
-    public function add()
+        return $this->response->setJSON($model->get()->getResultArray());
+       
+    }
+
+    public function createEvent()
     {
         $category = new \App\Models\EventCategoryModel();
         $classification = new \App\Models\EventClassificationModel();
@@ -89,7 +106,7 @@ class Events extends BaseController
         return view('event_add', $data);
     }
 
-    public function addEventAjax()
+    public function createEventAjax()
     {    
         $rules = [
             'event_name' => [ 'lable' => 'Event Name', 'rules' => 'required'],
@@ -243,17 +260,93 @@ class Events extends BaseController
 
     public function editEvent()
     {
-        return view('event_edit');
+        $category = new \App\Models\EventCategoryModel();
+        $classification = new \App\Models\EventClassificationModel();
+        $event_meta = new \App\Models\MetasModel();
+        $ev_status = new \App\Models\EventStatusModel();
+        $event = new \App\Models\EventModel();
+        $id = $this->request->getVar('id');
+        $data = [];
+
+        if(!$id){
+            //error
+        }
+
+        $event = $event->find($id);
+        if ($event){
+            $event_meta->select('*')->where('id', $event['id']);
+
+
+            $data = [
+                'event' => $event,
+                'categories' => $category->findAll(),
+                'classifications' => $classification->findAll(),
+                'ev_kpis' => $event_meta->findAll(),
+                'ev_status' => $ev_status->findAll(),
+                'event_id' => 0,
+            ];
+
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+
+        return view('event_edit', $data);
     }
 
-    public function deleteEventAjax($event = null)
+    public function deleteEventAjax()
     {
         
     }
 
-    public function updateEvent($var = null)
+    public function updateEvent()
     {
-        # code...
+        
+        $eventModel = new \App\Models\EventModel();
+        $category = new \App\Models\EventCategoryModel();
+        $classification = new \App\Models\EventClassificationModel();
+        $event_meta = new \App\Models\MetasModel();
+        $ev_status = new \App\Models\EventStatusModel();
+        $id = $this->request->getVar('id');
+        $event = $eventModel->find($id);
+
+        if(!$event){
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        
+
+        $dataInput = [
+            'id' => $id,
+            'title' =>  $this->request->getVar('event_name'),
+            'tite_ar' =>  $this->request->getVar('event_name_ar'),
+            'description' =>  $this->request->getVar('description'),
+            'description_ar' =>  $this->request->getVar('description_ar'),
+            'end_date' =>  $this->request->getVar('end_date'),
+            'start_date' =>  $this->request->getVar('start_date'),
+            'enabled' =>  $this->request->getVar('foo'),
+            'category_id' =>  $this->request->getVar('category'),
+            'classification_id' =>  $this->request->getVar('event_classification'),
+            'connected_tech' =>  $this->request->getVar('connected_tech'),
+            'staus_id' =>  $this->request->getVar('status'),
+            'manager_name' =>  $this->request->getVar('manager_name'),
+            'manager_email' =>  $this->request->getVar('manager_email'), 
+                      
+        ];
+        
+        $eventModel->save($dataInput);
+
+        $data = [
+            'event' => $event,
+            'categories' => $category->findAll(),
+            'classifications' => $classification->findAll(),
+            'ev_kpis' => $event_meta->findAll(),
+            'ev_status' => $ev_status->findAll(),
+            'event_id' => 0,
+            'success' => true,
+            'msg' => 'event saved successfully',
+        ];
+
+        return view('event_edit', $data);
     }
 
     public function deleteKPIAjax(){

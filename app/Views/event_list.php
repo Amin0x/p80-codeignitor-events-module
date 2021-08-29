@@ -133,7 +133,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($events as $event) : ?>
-                                        <tr>
+                                        <tr data-event-id="<?= $event['id'] ?>">
                                             <td><?php echo $event['title']; ?></td>
                                             <!-- <td><?php echo $event['description']; ?></td> -->
                                             <td><?php echo $event['start_date']; ?></td>
@@ -150,8 +150,8 @@
                                             <td><?php echo $event['state']; ?></td>
                                             <td><?php echo $event['city']; ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="far fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></button>
+                                                <a href="<?= base_url('/events/edit?id='.$event['id']) ?>" class="btn btn-warning btn-sm"><i class="far fa-edit"></i></a>
+                                                <button type="button" class="btn btn-danger btn-sm aa-event-delete"><i class="far fa-trash-alt"></i></button>
                                             </td>
 
                                         </tr>
@@ -176,7 +176,38 @@
     <script src="/assets/js/bootstrap.bundle.js"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script>
+        var siteUrl = '<?= base_url() ?>';
+        $(document).ready(function(){
 
+            $('.aa-event-delete').on('click', function(e){
+                e.preventDefault();
+                
+                var tr = $(this).parent().parent();
+                var id = tr.attr('data-event-id');
+                tr.remove();
+                
+
+                $.ajax({
+                    method: 'POST',
+                    url: siteUrl + '/events/del?id=' + id,
+                    success: function(data){
+                        if(data.success){
+                            tr.remove();
+                            $(body).append('<div class="alert alert-sucess" id="alertSuccess" role="alert" style="">event deleted</div>');
+                            setTimeout(() => {
+                                $('#alertSuccess').remove();
+                            }, 3000);
+                        } else {
+                            $(body).append('<div class="alert alert-danger" id="alertSuccess" role="alert" style="">event deleted</div>');
+                            setTimeout(() => {
+                                $('#alertSuccess').remove();
+                            }, 3000);
+                        }
+                    },
+                });
+            });
+
+        });
     </script>
 </body>
 

@@ -34,9 +34,13 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Events::index');
 $routes->get('calender/', 'Events::calender');
+$routes->get('calender/events', 'Events::calenderAjax');
 $routes->get('events/', 'Events::index');
-$routes->get('events/add', 'Events::add');
-$routes->post('events/add', 'Events::addEventAjax');
+$routes->get('events/edit', 'Events::editEvent');
+$routes->post('events/edit', 'Events::updateEvent');
+$routes->post('events/del', 'Events::deleteEventAjax');
+$routes->get('events/create', 'Events::createEvent');
+$routes->post('events/create', 'Events::createEventAjax');
 $routes->post('events/address', 'Events::addAddressAjax');
 $routes->get('events/pki', 'Events::listPki');
 $routes->post('events/pki', 'Events::addKPIAjax');
