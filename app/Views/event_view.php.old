@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $page_title; ?></title>
+
+
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/aamain.css">
+    <style>
+        ul.pagination>li {
+            display: inline-block;
+            padding: 4px 6px;
+            margin: 0 4px;
+            border: 1px solid #ccc;
+        }
+
+        ul.pagination>li:hover {
+            background-color: #f7f7f7;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f7f7f7;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="title mb-2">
+                    <h3>Event View</h3>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5>Event name</h5>
+                            <a href="<?= base_url('events/edit?id='.$event['id']) ?>" class="btn btn-outline-dark" role="button">Edit</a>
+                        </div>
+                        <p>event desc</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <strong>Add Event Details (KPI)</strong>
+                            <?php if (isset($event_meta)) : ?>
+                                <?php foreach ($event_meta as $val) : ?>
+                                    <div class="aa-kpi-row d-flex mb-2">
+                                        <input type="text" class="form-control" name="option_name[]" value="<?= val['name'] ?>" style="margin-right: .3rem;" disabled>
+                                        <input type="text" class="form-control" name="option_val[]" value="<?= val['value'] ?>" style="margin-left: .3rem;" disabled>
+                                        <button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            <div id="aaOptionWarrper">
+                            </div>
+                            <div class="aa-kpi-wrapper d-flex" id="kpiWrapper">
+                                <select type="text" class="form-control" name="kpi_dump" id="kpi_dump" placeholder="KPI Name" style="margin-right: .3rem;">
+                                    <?php foreach ($meta as $val) : ?>
+                                        <option value="<?php echo $val['id']; ?>"><?php echo $val['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="text" class="form-control" name="kpi_dump_val" id="kpi_dump_val" placeholder="KPI Value" style="margin-left: .3rem;">
+                                <button type="button" class="btn btn-success" id="aaAddOption" style="margin-left: .6rem;"><i class="fas fa-angle-right"></i></button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/bootstrap.bundle.js"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script>
+        var siteUrl = '<?= base_url() ?>';
+        $(document).ready(function() {
+
+            $('.aa-event-delete').on('click', function(e) {
+                e.preventDefault();
+
+                var tr = $(this).parent().parent();
+                var id = tr.attr('data-event-id');
+                tr.remove();
+
+
+                $.ajax({
+                    method: 'POST',
+                    url: siteUrl + '/events/del?id=' + id,
+                    success: function(data) {
+                        if (data.success) {
+                            tr.remove();
+                            $(body).append('<div class="alert alert-sucess" id="alertSuccess" role="alert" style="">event deleted</div>');
+                            setTimeout(() => {
+                                $('#alertSuccess').remove();
+                            }, 3000);
+                        } else {
+                            $(body).append('<div class="alert alert-danger" id="alertSuccess" role="alert" style="">event deleted</div>');
+                            setTimeout(() => {
+                                $('#alertSuccess').remove();
+                            }, 3000);
+                        }
+                    },
+                });
+            });
+
+        });
+    </script>
+</body>
+
+</html>

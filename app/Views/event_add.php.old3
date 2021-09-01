@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/aamain.css">
+</head>
+
+<body style="background-color: #f7f7f7;">
+    <div class="container">
+
+        <div class="title">
+            <h1>Create Event</h1>
+        </div>
+        <form action="<?= base_url() ?>/events/create" method="post" id="basicForm">
+            <?= csrf_field() ?>
+            <div class="row" id="aa-error-msg">
+
+            </div>
+            <div class="row">
+                <div class="col-12 p-0">
+                    <button type="button" class="tablink" id="navBasicTab">Basic</button>
+                    <button type="button" class="tablink" id="navAddressTab">Address</button>
+                    <button type="button" class="tablink" id="navKpiTab">Event KPI</button>
+                </div>
+
+                <div class="col-12 tabcontent" id="basicTab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Basic</h4>
+                            <div class="form-group">
+                                <label for="eventName">Event Name</label>
+                                <input type="text" class="form-control" name="event_name" id="eventName" aria-describedby="helpId" placeholder="event name">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="eventNameAr">اسم الفعالية</label>
+                                <input type="text" class="form-control" name="event_name_ar" id="eventNameAr" aria-describedby="helpId" placeholder="event name">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="description" id="description" rows="6" aria-describedby="helpId" placeholder="description"></textarea>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="descriptionAr">وصف الفعالية</label>
+                                <textarea class="form-control" name="description_ar" id="descriptionAr" rows="6" aria-describedby="helpId" placeholder="description"></textarea>
+                            </div>
+                            <div class="form-group mt-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="">Start Date</label>
+                                        <input type="datetime-local" class="form-control" name="start_date" id="startDate">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="">End Date</label>
+                                        <input type="datetime-local" class="form-control" name="end_date" id="endDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="">Location</label>
+                                <input type="text" class="form-control" name="location" id="location" placeholder="location">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="category">Enabled</label>
+                                <select type="text" class="form-control" name="enabled" id="enabled">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="category">Category</label>
+                                <select class="form-control" name="category" id="category">
+                                    <?php foreach ($category as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Status</label>
+                                <select class="form-control" name="status">
+                                    <?php foreach ($ev_status as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['status_name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Classification</label>
+                                <select class="form-control" name="event_classification">
+                                    <?php foreach ($classification as $value) : ?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="status">Connected to tech</label>
+                                <select class="form-control" name="connected_tech">
+                                    <option value="no">no</option>
+                                    <option value="yes">yes</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mt-2">
+                                <label for="">Manager Name</label>
+                                <input type="text" class="form-control" name="manager_name" id="managerName" placeholder="">
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="">Manager Email</label>
+                                <input type="text" class="form-control" name="manager_email" id="managerEmail" placeholder="">
+                            </div>
+                            <div class="col-12 mt-2"><button type="submit" id="saveEvent" class="btn btn-success">Save Event</button></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-12 tabcontent" id="kpiTab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>KPI</h4>
+                           
+                            <div id="aaOptionWarrper">
+                            </div>
+                            <div class="aa-kpi-wrapper d-flex" id="kpiWrapper">
+                                <select type="text" class="form-control" name="kpi_dump" id="kpi_dump" placeholder="KPI Name" style="margin-right: .3rem;">
+                                    <?php foreach ($meta as $val) : ?>
+                                        <option value="<?php echo $val['id']; ?>"><?php echo $val['name']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="text" class="form-control" name="kpi_dump_val" id="kpi_dump_val" placeholder="KPI Value" style="margin-left: .3rem;">
+                                <button type="button" class="btn btn-success" id="aaAddOption" style="margin-left: .6rem;"><i class="fas fa-angle-right"></i></button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 tabcontent" id="addressTab">
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <h4>Location</h4>
+                            <div class="form-group">
+                                <label for="">Location</label>
+                                <input type="text" class="form-control" name="location" placeholder="Location">
+                            </div>
+                            <div class="form-group">
+                                <label for="">State</label>
+                                <input type="text" class="form-control" name="state" placeholder="State">
+                            </div>
+                            <div class="form-group">
+                                <label for="">City</label>
+                                <input type="text" class="form-control" name="city" placeholder="City">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Latitude</label>
+                                <input type="text" class="form-control" name="latitude" placeholder="Latitude">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Longitude</label>
+                                <input type="text" class="form-control" name="longitude" placeholder="Longitude">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Map Region (polygon)</label>
+                                <input type="text" class="form-control" name="map_region" placeholder="Map Region">
+                            </div>
+                            <div class="mt-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.js"></script>
+    <script>
+        var index = 0;
+        var eventId = '<?php echo $event_id; ?>';
+        var baseUrl = '<?php echo base_url(); ?>';
+
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.aa-remove-kpi', function(e) {
+                $(this).closest('.aa-kpi-row').remove();
+            });
+
+            $(document).on('click', '#aaAddOption', function(e) {
+                var name = $('#kpi_dump').find(":selected").text();
+                var name_val = $('#kpi_dump').find(":selected").val();
+                var val = $('#kpi_dump_val').val();
+
+                if(val != ''){
+                    var html = '<div class="aa-kpi-row d-flex mb-2">';
+                    html += '<input type="text" class="form-control" name="option_name[]" value="'+ name +'" style="margin-right: .3rem;" disabled>';
+                    html += '<input type="text" class="form-control" name="option_val[]" value="'+ val +'" style="margin-left: .3rem;" disabled>';
+                    html += '<input type="hidden" name="option_id[]" value="'+ name_val +'">';
+                    html += '<button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;"><i class="fas fa-trash-alt"></i></button>';
+                    html += '</div>';
+
+                    $('#aaOptionWarrper').append(html);
+
+                    $.ajax({
+                        method:"POST",
+                        data: {name: name, value: name_val},
+                        success: function(data){}
+                    });
+
+                }
+            });
+
+
+            
+
+            $('#basicForm').on('submit', function(e) {
+                e.preventDefault();
+                console.log($('#basicForm').serialize());
+                $.post({
+                    url: baseUrl + '/events/create',
+                    data: $('#basicForm').serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        if (data.success == true) {
+                            eventId = data.id;
+                            $('#aa-error-msg').html('<div class="alert alert-success" role="alert">Event Saved successfully!</div>');
+
+                        } else {
+                            $('#aa-error-msg').html('<div class="alert alert-danger" role="alert">' + data.msg + '</div>');
+                        }
+                    },
+                });
+            });
+
+
+            function openPage(pageName, elmnt) {
+
+                // Hide all elements with class="tabcontent" by default */
+                var i, tabcontent, tablinks;
+                tabcontent = $(".tabcontent");
+                tabcontent.hide();
+
+
+                // Remove the background color of all tablinks/buttons
+                tablinks = $(".tablink");
+                tablinks.css("background-color", "");
+
+                // Show the specific tab content
+                $(pageName).show();
+
+                // Add the specific color to the button used to open the tab content
+                elmnt.css("background-color", "#eaeaff");
+                elmnt.css("color", "#000");
+            }
+
+            $('#navBasicTab').on('click', function(e) {
+                e.preventDefault();
+                openPage('#basicTab', $(this));
+            });
+            $('#navKpiTab').on('click', function(e) {
+                e.preventDefault();
+                openPage('#kpiTab', $(this));
+            });
+            $('#navAddressTab').on('click', function(e) {
+                e.preventDefault();
+                openPage('#addressTab', $(this));
+            });
+
+            $("#navBasicTab").click();
+
+        });
+    </script>
+
+
+</body>
+
+</html>

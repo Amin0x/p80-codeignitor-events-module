@@ -36,16 +36,17 @@ $routes->get('/', 'Events::index');
 $routes->get('calender/', 'Events::calender');
 $routes->get('calender/events', 'Events::calenderAjax');
 $routes->get('events/', 'Events::index');
+$routes->get('events/view', 'Events::viewEvent');
 $routes->get('events/edit', 'Events::editEvent');
 $routes->post('events/edit', 'Events::updateEvent');
 $routes->post('events/del', 'Events::deleteEventAjax');
 $routes->get('events/create', 'Events::createEvent');
 $routes->post('events/create', 'Events::createEventAjax');
 $routes->post('events/address', 'Events::addAddressAjax');
-$routes->get('events/pki', 'Events::listPki');
-$routes->post('events/pki', 'Events::addKPIAjax');
-$routes->post('events/kpi/del', 'Events::deleteKPIAjax');
-$routes->post('events/eventkpi', 'Events::addKPIToEventAjax');
+$routes->get('events/option', 'Events::listOption');
+$routes->post('events/option', 'Events::createOptionAjax');
+$routes->post('events/eventkpi/del', 'Events::deleteOptionFromEventAjax');
+$routes->post('events/eventkpi', 'Events::addOptionToEventAjax');
 
 
 /*
