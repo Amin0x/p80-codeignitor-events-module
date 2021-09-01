@@ -45,6 +45,8 @@ $routes->post('events/create', 'Events::createEventAjax');
 $routes->post('events/address', 'Events::addAddressAjax');
 $routes->get('events/option', 'Events::listOption');
 $routes->post('events/option', 'Events::createOptionAjax');
+$routes->post('events/option/update', 'Events::updateOptionAjax');
+$routes->post('events/option/delete', 'Events::deleteOptionAjax');
 $routes->post('events/eventkpi/del', 'Events::deleteOptionFromEventAjax');
 $routes->post('events/eventkpi', 'Events::addOptionToEventAjax');
 

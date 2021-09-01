@@ -349,7 +349,7 @@ class Events extends BaseController
 
     public function createOptionAjax()
     {    
-        $kpis = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\MetasModel();
 
         $data = [
             'name' => $this->request->getPost('pki_name'),
@@ -357,10 +357,31 @@ class Events extends BaseController
             'input_type' => $this->request->getPost('input_type'),
         ];
 
-        $res = $kpis->insert($data);
-        return $this->response->setJSON( [
-            'success' => $res,
-        ]); 
+        $res = $metasModel->insert($data);
+        if($res){
+
+            $db = \Config\Database::connect();
+            $sql = "SELECT metas.id, metas.name, pki_update_ref.name as update_name, pki_input_ref.name as input_name ";
+            $sql .= "FROM metas ";
+            $sql .= "JOIN pki_update_ref ON (metas.frequent_update = pki_update_ref.id) ";
+            $sql .= "JOIN pki_input_ref ON (metas.input_type = pki_input_ref.id) ";
+            $sql .= " WHERE metas.id = ".$res;
+           
+            $query = $db->query($sql);
+            
+
+            return $this->response->setJSON( [
+                'success' => $res != false? true: false,
+                'msg' => 'Option added successfully',
+                'option' => $query->getResultArray(),
+            ]); 
+        }
+
+        return $this->response->setJSON([
+            'success' => false,
+            'msg' => 'error cant add option (kpi)',
+        ]);
+
     }
 
     public function listOption()
@@ -394,23 +415,47 @@ class Events extends BaseController
 
     public function updateOptionAjax()
     {    
-        return $this->response->setJSON( $this->request->getPost()); 
-        //return $this->respondCreated();
-        return 'success';
+        $metasModel = new \App\Models\MetasModel();
+
+        $data = [
+            'id' => $this->request->getVar('id'),
+            'name' => $this->request->getVar('name'),
+            'frequent_update' => $this->request->getVar('frequent_update'),
+            'input_type' => $this->request->getVar('input_type'),
+        ];
+
+        if($metasModel->update($data)){
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'updated successfully',
+                'option' => $metasModel->find($data['id']),
+            ]); 
+        }
+
+        return $this->response->setJSON([
+            'success' => false,
+            'msg' => 'error cant update the option',
+        ]); 
+       
     }
    
 
     public function deleteOptionAjax(){
-        $model = new \App\Models\EventMetaModel();
-        $id = $this->request->getPost('id');
-        $model->where('id', $id)->delete();
+        $metasModel = new \App\Models\MetasModel();
 
-        $resp = [
-            'success' => true,
-            'msg' => 'success',
-        ];
+        $data = $this->request->getVar('id');
+            
+        if($metasModel->delete($data)){
+            return $this->response->setJSON([
+                'success' => true,
+                'msg' => 'deleted successfully',
+            ]); 
+        }
 
-        return $this->response->setJSON($resp);
+        return $this->response->setJSON([
+            'success' => false,
+            'msg' => 'error cant delete the option',
+        ]); 
     }
     
     public function calender()

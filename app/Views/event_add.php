@@ -17,6 +17,7 @@
     <link id="skin-default" rel="stylesheet" href="/assets/css/theme.css">
     <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.css">    
     <link rel="stylesheet" href="/assets/css/aamain.css">
+    <link rel="stylesheet" href="/assets/css/jquery.datetimepicker.min.css">
 </head>
 
 <body class="nk-body npc-default has-apps-sidebar has-sidebar ">
@@ -557,29 +558,18 @@
                                 <h6 class="overline-title text-primary-alt">Dashboards</h6>
                             </li><!-- .nk-menu-heading -->
                             <li class="nk-menu-item">
-                                <a href="html/index.html" class="nk-menu-link">
+                                <a href="/events" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
-                                    <span class="nk-menu-text">Default Dashboard</span>
+                                    <span class="nk-menu-text">Events</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
                             <li class="nk-menu-item">
-                                <a href="html/index-sales.html" class="nk-menu-link">
+                                <a href="/events/option" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
-                                    <span class="nk-menu-text">Sales Dashboard</span>
+                                    <span class="nk-menu-text">Event Options (KPI)</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="html/index-crypto.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-bitcoin-cash"></em></span>
-                                    <span class="nk-menu-text">Crypto Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="html/index-invest.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-coins"></em></span>
-                                    <span class="nk-menu-text">Invest Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
+                           
                             <li class="nk-menu-heading">
                                 <h6 class="overline-title text-primary-alt">Pre-Built Pages</h6>
                             </li><!-- .nk-menu-heading -->
@@ -1128,12 +1118,12 @@
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <label for="">Start Date</label>
-                                                                <input type="datetime-local" class="form-control"
+                                                                <input type="text" class="form-control"
                                                                     name="start_date" id="startDate">
                                                             </div>
                                                             <div class="col-6">
                                                                 <label for="">End Date</label>
-                                                                <input type="datetime-local" class="form-control"
+                                                                <input type="text" class="form-control"
                                                                     name="end_date" id="endDate">
                                                             </div>
                                                         </div>
@@ -1265,6 +1255,7 @@
     <script src="./assets/js/scripts.js?ver=2.4.0"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.js"></script>
+    <script src="/assets/js/jquery.datetimepicker.full.min.js"></script>
     <script>
         var index = 0;
         var eventId = '<?php echo $event_id; ?>';
@@ -1273,7 +1264,10 @@
 
         $(document).ready(function() {
 
-             
+            $('#startDate').datetimepicker();
+            $('#endDate').datetimepicker();
+
+
             $('#basicForm').on('submit', function(e) {
                 e.preventDefault();
                 console.log($('#basicForm').serialize());

@@ -507,30 +507,20 @@
                             <li class="nk-menu-heading">
                                 <h6 class="overline-title text-primary-alt">Dashboards</h6>
                             </li><!-- .nk-menu-heading -->
+                            
                             <li class="nk-menu-item">
-                                <a href="html/index.html" class="nk-menu-link">
+                                <a href="/events" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
-                                    <span class="nk-menu-text">Default Dashboard</span>
+                                    <span class="nk-menu-text">Events</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
                             <li class="nk-menu-item">
-                                <a href="html/index-sales.html" class="nk-menu-link">
+                                <a href="/events/option" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
-                                    <span class="nk-menu-text">Sales Dashboard</span>
+                                    <span class="nk-menu-text">Event Options (KPI)</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="html/index-crypto.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-bitcoin-cash"></em></span>
-                                    <span class="nk-menu-text">Crypto Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="html/index-invest.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-coins"></em></span>
-                                    <span class="nk-menu-text">Invest Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
+                            
                             <li class="nk-menu-heading">
                                 <h6 class="overline-title text-primary-alt">Pre-Built Pages</h6>
                             </li><!-- .nk-menu-heading -->
@@ -923,18 +913,18 @@
                         <div class="nk-content-inner">
                             <div class="nk-content-body">
                                 <div class="container">
-                                    <h3>PKI</h3>
+                                    <h3>Options (KPI's)</h3>
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="aa-pki-list">
-                                                <table class="table">
+                                                <table class="table"  id="aaPKIList">
                                                     <thead>                        
-                                                        <th>PKI Name</th>
+                                                        <th>KPI Name</th>
                                                         <th>Updating Period</th>  
                                                         <th>Input Type</th>  
                                                         <th>Actions</th>                      
                                                     </thead>
-                                                    <tbody id="aaPKIList">
+                                                    <tbody>
                                                         <?php foreach($event_kpis as $event_kpi): ?>
                                                         <tr data-name="<?php echo $event_kpi->name; ?>" data-id="<?php echo $event_kpi->id; ?>" data-udpate-id="<?php echo $event_kpi->frequent_update_id; ?>" data-type-id="<?php echo $event_kpi->input_type_id; ?>">
                                                             <td><?php echo $event_kpi->name; ?></td>
@@ -942,7 +932,6 @@
                                                             <td><?php echo $event_kpi->input_type; ?></td>
                                                             
                                                             <td>
-                                                                <button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
                                                                 <button type="button" class="btn btn-outline-danger aa-delete-pki">Delete</button>
                                                             </td>
                                                         </tr>
@@ -957,8 +946,8 @@
                                                 <div class="card-body">
                                                     <div class="aa-pki-msg"></div>
                                                     <div class="aa-pki-form">
-                                                        <form id="myForm">
-                                                            <div class="h4">Add New KPI</div>
+                                                        <form id="myForm" method="POST">
+                                                            <div class="h4">Add New Option (KPI)</div>
                                                             <div class="form-group">
                                                               <label for="">Name</label>
                                                               <input type="text" class="form-control" name="pki_name" placeholder="PKI Name">
@@ -979,7 +968,7 @@
                                                                   <?php endforeach; ?>                                  
                                                               </select>
                                                             </div>
-                                                            <div class="mt-3"><a name="" id="aaAddBtn" class="btn btn-primary" href="#" role="button">Add</a></div>
+                                                            <div class="mt-3"><button type="submit" class="btn btn-primary" role="button">Add</button></div>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -1001,7 +990,7 @@
                                                     <div class="card-body">
                                                         <div class="aa-pki-msg"></div>
                                                         <div class="aa-pki-form">
-                                                            <form id="myFormModel">
+                                                            <form action="/event/option/update" id="myFormModel" method="POST">
                                                                 <input type="hidden" name="id" id="updatedPki" value="">
                                                                 <div class="form-group">
                                                                   <label for=""></label>
@@ -1047,129 +1036,77 @@
     </div>
     <!-- app-root @e -->
     <!-- JavaScript -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.js"></script>
     <script src="./assets/js/bundle.js?ver=2.4.0"></script>
     <script src="./assets/js/scripts.js?ver=2.4.0"></script>
-    <script src="/assets/js/bootstrap.bundle.js"></script>
     <script src="/assets/js/toastify-js.js"></script>
-    <script src="/assets/js/scripts.js"></script>
+   
     <script>
-        document.addEventListener('DOMContentLoaded', function(e){
+        const baseUrl = "<?= base_url() ?>";
 
-            var aaAddBtn = document.getElementById('aaAddBtn');
-            
-            aaAddBtn.addEventListener('click', addNewPKI);
+        $(document).ready(function(e){
+
+            var form = $( "#myForm" );            
+            form.on('submit', addNewPKI);
             
 
             function addNewPKI(e){
                 e.preventDefault();
                 
-                var form = document.getElementById( "myForm" );
-                const xhr = new XMLHttpRequest();               
-                const fd = new FormData( form );
-                
-                xhr.onload = function(event) {
-                    // var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
-                    // msgBox.innerHTML = '<div class="text-success">PKI successfully added</div>';
-                    Toastify({
-                                text: "PKI successfully added",
-                                duration: 3000,
-                                //destination: "https://github.com/apvarun/toastify-js",
-                                //newWindow: true,
-                                close: true,
-                                gravity: "top", // `top` or `bottom`
-                                position: "left", // `left`, `center` or `right`
-                                backgroundColor: "#55bf76",
-                                stopOnFocus: true, // Prevents dismissing of toast on hover
-                                onClick: function(){} // Callback after click
-                        }).showToast();
-                }
-
-                xhr.onerror = function( event ) {
-                    // var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
-                    // msgBox.innerHTML = '<div class="text-danger">Error: Can\'t Add PKI</div>';
-                    Toastify({
-                                text: "Error: Can\'t Add PKI",
-                                duration: 3000,
-                                //destination: "https://github.com/apvarun/toastify-js",
-                                //newWindow: true,
-                                close: true,
-                                gravity: "top", // `top` or `bottom`
-                                position: "left", // `left`, `center` or `right`
-                                backgroundColor: "#fb353e",
-                                stopOnFocus: true, // Prevents dismissing of toast on hover
-                                onClick: function(){} // Callback after click
-                        }).showToast();
-                }
-
-                xhr.open( "POST", "<?php echo base_url('events/pki'); ?>" );
-                //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-                //xhr.setRequestHeader('Content-Type','application/json');
-                xhr.setRequestHeader( "X-Requested-With", "XMLHttpRequest");
-                xhr.send( fd );
+                                              
+                $.ajax({
+                    url: baseUrl + '/events/option',
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function(data){
+                        if(data.success){                         
+                                                
+                            console.log(data);
+                            var html = '<tr data-name="'+data.option[0].name+'" data-id="'+ data.option[0].id +'" data-udpate-id="'+data.option[0].update_name+'" data-type-id="'+data.option[0].input_name+'">';
+                            html += '<td>'+data.option[0].name+'</td>';
+                            html += '<td>'+data.option[0].update_name+'</td>';
+                            html += '<td>'+data.option[0].input_name+'</td><td>';
+                            //html += '<button type="button" class="btn btn-outline-warning aa-edit-pki" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>';
+                            html += '<button type="button" class="btn btn-outline-danger aa-delete-pki">Delete</button>';
+                            html += '</td></tr>';
+                              
+                            $('#aaPKIList > tbody:last-child').append(html);
+                                                       
+                        }
+                    }
+                });            
             }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(e){
 
-            var updatedPki = undefined;
-            var eles = document.getElementsByClassName('aa-edit-pki');
-            var aaSave = document.getElementById('aaSave');
+            $(document).on('click', '.aa-delete-pki', function(e){
 
-            aaSave.addEventListener('click', savePkiModel);
-
-            function savePkiModel(e){
                 e.preventDefault();
-                document.getElementById('updatedPki').setAttribute('value', updatedPki);
-                //updatePKI();
-            }
-            
-            for(i = 0; i < eles.length; i++){
-                eles[i].addEventListener('click', function(e){
-                    //document.getElementById('exampleModal').modal('show');
-                    var tr = e.target.parentNode.parentNode;
-                    
-                    var name = tr.cells[0].textContent;
-                    document.getElementById('pkiNameModel').value = name;
-                    
-                    var updatePeriod = tr.getAttribute('data-udpate-id');
-                    var updatingPeriodModel = document.getElementById('updatingPeriodModel');
-                    updatingPeriodModel.value = updatePeriod;
-                    updatingPeriodModel.setAttribute('selected', 'selected');
-                    
-                    var inputTypeId = tr.getAttribute('data-type-id');
-                    var inputTypeModel = document.getElementById('inputTypeModel');
-                    inputTypeModel.value = inputTypeId;
-                    inputTypeModel.setAttribute('selected', 'selected');
+                console.log(e.target);
+                var tr = $(this).closest('tr');
+                var id = tr.attr("data-id");
+                tr.css('background-color','#ccc');
+                $.ajax({
+                    url: baseUrl + '/events/option/delete',
+                    method: "POST",
+                    data: {id:id},
+                    success: function(data){
+                        if(data.success){
+                            tr.remove();
+                        } else {
+                            console.log('');
+                            tr.css('background-color','#ccc');
+                        }
+                    }
 
-                    updatedPki = updatePeriod;
                 });
-            }
-            
 
-            function updatePKI(id){                
+            });
+           
 
-                var form = document.getElementById( "myFormModel" );
-                const xhr = new XMLHttpRequest();               
-                const FD = new FormData( form );
-
-                xhr.addEventListener( "load", function(event) {
-                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
-                    msgBox.innerHTML = '<div class="text-success">PKI successfully added</div>';
-                } );
-
-                xhr.addEventListener( "error", function( event ) {
-                    var msgBox = document.getElementsByClassName('aa-pki-msg')[0];
-                    msgBox.innerHTML = '<div class="text-danger">Error: Can\'t Add PKI</div>';
-                } );
-
-                xhr.open( "POST", "https://example.com/cors.php" );
-                //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-                xhr.setRequestHeader('Content-Type','application/json');
-                xhr.send( FD );
-            }
+           
         });
     </script>
+   
 </body>
 
 </html>
