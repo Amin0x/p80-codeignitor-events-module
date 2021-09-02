@@ -507,27 +507,21 @@
                                 <h6 class="overline-title text-primary-alt">Dashboards</h6>
                             </li><!-- .nk-menu-heading -->
                             <li class="nk-menu-item">
-                                <a href="html/index.html" class="nk-menu-link">
+                                <a href="/events" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
-                                    <span class="nk-menu-text">Default Dashboard</span>
+                                    <span class="nk-menu-text">Events</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
                             <li class="nk-menu-item">
-                                <a href="html/index-sales.html" class="nk-menu-link">
+                                <a href="/events/option" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
-                                    <span class="nk-menu-text">Sales Dashboard</span>
+                                    <span class="nk-menu-text">Event Options (KPI)</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
                             <li class="nk-menu-item">
-                                <a href="html/index-crypto.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-bitcoin-cash"></em></span>
-                                    <span class="nk-menu-text">Crypto Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="html/index-invest.html" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-coins"></em></span>
-                                    <span class="nk-menu-text">Invest Dashboard</span>
+                                <a href="/calendar" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
+                                    <span class="nk-menu-text">Calender</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
                             <li class="nk-menu-heading">

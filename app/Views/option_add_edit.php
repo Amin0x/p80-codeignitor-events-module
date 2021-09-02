@@ -520,6 +520,12 @@
                                     <span class="nk-menu-text">Event Options (KPI)</span>
                                 </a>
                             </li><!-- .nk-menu-item -->
+                            <li class="nk-menu-item">
+                                <a href="/calendar" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-speed"></em></span>
+                                    <span class="nk-menu-text">Calender</span>
+                                </a>
+                            </li><!-- .nk-menu-item -->
                             
                             <li class="nk-menu-heading">
                                 <h6 class="overline-title text-primary-alt">Pre-Built Pages</h6>

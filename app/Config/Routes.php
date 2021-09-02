@@ -33,8 +33,8 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Events::index');
-$routes->get('calender/', 'Events::calender');
-$routes->get('calender/events', 'Events::calenderAjax');
+$routes->get('calendar/', 'Events::calender');
+$routes->get('calendar/events', 'Events::calenderAjax');
 $routes->get('events/', 'Events::index');
 $routes->get('events/view', 'Events::viewEvent');
 $routes->get('events/edit', 'Events::editEvent');

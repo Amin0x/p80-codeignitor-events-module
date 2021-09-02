@@ -472,17 +472,35 @@ class Events extends BaseController
         
         $model = new \App\Models\EventModel();
         $model->select('id, title, end_date, start_date');
-        if($this->request->getVar('start')){
-            $model->where('start_date >=', $this->request->getVar('start'));
+        if ($this->request->getGet('start')) {
+            $model->where('start_date >=', $this->request->getGet('start'));
         }
     
-        if($this->request->getVar('end')){
-            $model->where('end_date <=', $this->request->getVar('end'));
+        if ($this->request->getGet('end')) {
+            $model->where('end_date <=', $this->request->getGet('end'));
         }
 
-        return $this->response->setJSON($model->get()->getResultArray());
+        $data = [];
+        foreach ($model->findAll(50) as $value) {
+
+            $data[] = [
+            'id'=> $value['id'],
+            'allDay'=> false,
+            'title'=> $value['title'],
+            'url'=> base_url().'/events/view?id='.$value['id'],
+            'start' => date('c', strtotime($value['start_date'])),
+            'end' => date('c', strtotime($value['end_date'])),
+            //'backgroundColor' => '',
+            //'borderColor' => '',
+            //'textColor' => '',
+            'editable'=> false,    
+            ];
+        }
+        return $this->response->setJSON($data);
        
     }
+
+    
     public function test($var = null)
     {
         # code...
