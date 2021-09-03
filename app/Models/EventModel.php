@@ -31,6 +31,21 @@ class EventModel extends Model
         'map_region',
     ];
 
+    protected $validationRules = [
+        'title' => 'required',
+        'description' =>  'required',
+        'end_date' => 'required',
+        'start_date' =>  'required',
+        'manager_name' =>  'required',
+        'manager_email' =>  'required|valid_email',
+    ]; 
+
+    protected $validationMessages = [
+        'title'        => [
+            'required' => 'Sorry. That email has already been taken. Please choose another.'
+        ]
+    ];
+
     public function get_count() {
         return $this->db->count_all($this->table);
     }

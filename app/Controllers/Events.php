@@ -26,31 +26,31 @@ class Events extends BaseController
         $model->join('event_classification', 'event_classification.id = `events`.classification_id');
         $model->join('event_status', 'event_status.id = `events`.staus_id');
         
-        if($this->request->getVar('category')){
+        if ($this->request->getVar('category')) {
             $model->where('category_id', $this->request->getVar('category'));
         }
         
-        if($this->request->getVar('enabled')){
+        if ($this->request->getVar('enabled')) {
             $model->where('enabled', $this->request->getVar('enabled'));
         }
 
-        if($this->request->getVar('classification')){
+        if($this->request->getVar('classification')) {
             $model->where('classification_id', $this->request->getVar('classification'));
         }
        
-        if($this->request->getVar('status')){
+        if ($this->request->getVar('status')) {
             $model->where('staus_id', $this->request->getVar('staus'));
         }
 
-        if($this->request->getVar('region')){
+        if ($this->request->getVar('region')) {
             $model->where('region', $this->request->getVar('region'));
         }
 
-        if($this->request->getVar('state')){
+        if ($this->request->getVar('state')) {
             $model->where('state', $this->request->getVar('state'));
         }
 
-        if($this->request->getVar('city')){
+        if ($this->request->getVar('city')) {
             $model->where('city', $this->request->getVar('city'));
         }
             
@@ -68,14 +68,15 @@ class Events extends BaseController
         return view('event_list', $data);
 	}
 
-    public function viewEvent(){
+    public function viewEvent()
+    {
 
         $metasModel = new \App\Models\MetasModel();
         $model = new \App\Models\EventModel();
         $id = $this->request->getVar('id');
         $event = $model->find($id);
 
-        if(!$event){
+        if (!$event) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
         $data = [
@@ -121,7 +122,7 @@ class Events extends BaseController
         ];
 
 
-        if(! $this->validate($rules)){
+        if (! $this->validate($rules)) {
             return $this->response->setJSON(['success' => false, 'msg' => 'Error: Invalid Inputs',]);
         }
 
@@ -138,9 +139,56 @@ class Events extends BaseController
             'connected_tech' =>  $this->request->getVar('connected_tech'),
             'staus_id' =>  $this->request->getVar('status'),
             'manager_name' =>  $this->request->getVar('manager_name'),
-            'manager_email' =>  $this->request->getVar('manager_email'),           
+            'location' =>  $this->request->getVar('location'),           
+            'latitude' =>  $this->request->getVar('latitude'),           
+            'longitude' =>  $this->request->getVar('longitude'),           
+            'region' =>  $this->request->getVar('region'),           
+            'state' =>  $this->request->getVar('state'),           
+            'city' =>  $this->request->getVar('city'),           
+            'map_region' =>  $this->request->getVar('map_region'),           
         ];
         
+        $err = [];
+        $err_fields = [];
+
+        if(trim($data['title']) == ''){
+            $err['title'] = 'you must inter title';
+            $err_fields[] = 'title';
+        }
+
+        if(trim($data['description']) == ''){
+            $err['description'] = 'you must inter description';
+            $err_fields[] = 'description';
+        }
+        if(trim($data['start_date']) == ''){
+            $err['start_date'] = 'you must inter description';
+            $err_fields[] = 'start_date';
+        }
+        if(trim($data['staus_id']) == ''){
+            $err['staus_id'] = 'you must inter description';
+            $err_fields[] = 'staus_id';
+        }
+        if(trim($data['category_id']) == ''){
+            $err['category_id'] = 'you must inter description';
+            $err_fields[] = 'category_id';
+        }
+        if(trim($data['classification_id']) == ''){
+            $err['classification_id'] = 'you must inter description';
+            $err_fields[] = 'classification_id';
+        }
+        if(trim($data['location']) == ''){
+            $err['location'] = 'you must inter description';
+            $err_fields[] = 'location';
+        }
+        if(trim($data['city']) == ''){
+            $err['city'] = 'you must inter description';
+            $err_fields[] = 'city';
+        }
+        if(trim($data['state']) == ''){
+            $err['state'] = 'you must inter description';
+            $err_fields[] = 'state';
+        }
+
         $model = new \App\Models\EventModel();
        
         $id = $model->insert($data);
@@ -160,6 +208,8 @@ class Events extends BaseController
         $data['success'] = false;
         $data['msg'] = "Bad Input Fields";
         $data['event_id'] = $id;
+        $data['error'] = $err;
+        $data['err_fields'] = $err_fields;
         return $this->response->setJSON($data);
     }
 

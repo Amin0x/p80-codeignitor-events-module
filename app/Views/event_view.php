@@ -929,10 +929,10 @@
                                                 </div>
                                                 <p><strong>Description:</strong></p>
                                                 <p><?= $event['description'] ?></p>
-                                                <p><strong>Start Date:</strong> <?= $event['start_date'] ?></p>
-                                                <p><strong>End Date:</strong> <?= $event['end_date'] ?></p>
-                                                <p><strong>Enabled:</strong> <?= $event['enabled']? 'Yes':'No' ?></p>
-                                                <p><strong>Connected To Technology:</strong> <?= $event['connected_tech']? 'Yes':'No' ?></p>
+                                                <p><strong>Start Date:</strong> <?php echo $event['start_date']; ?></p>
+                                                <p><strong>End Date:</strong> <?php echo $event['end_date']; ?></p>
+                                                <p><strong>Enabled:</strong> <?php echo $event['enabled']? 'Yes':'No'; ?></p>
+                                                <p><strong>Connected To Technology:</strong> <?php echo $event['connected_tech']? 'Yes':'No'; ?></p>
                                             </div>
                                         </div>
                                         <div class="card">

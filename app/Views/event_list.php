@@ -1033,8 +1033,8 @@
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($events as $event) : ?>
-                                                                <tr data-event-id="<?= $event['id'] ?>">
-                                                                    <td><a href="<?= base_url('/events/view?id='.$event['id'])?>"><?php echo $event['title']; ?></a></td>
+                                                                <tr data-event-id="<?php echo $event['id']; ?>">
+                                                                    <td><a href="<?php echo base_url('/events/view?id='.$event['id']); ?>"><?php echo $event['title']; ?></a></td>
                                                                     <!-- <td><?php echo $event['description']; ?></td> -->
                                                                     <td><?php echo $event['start_date']; ?></td>
                                                                     <td><?php echo $event['end_date']; ?></td>
@@ -1050,7 +1050,7 @@
                                                                     <td><?php echo $event['state']; ?></td>
                                                                     <td><?php echo $event['city']; ?></td>
                                                                     <td>
-                                                                        <a href="<?= base_url('/events/edit?id='.$event['id']) ?>" class="btn btn-warning btn-sm"><i class="far fa-edit"></i></a>
+                                                                        <a href="<?php echo base_url('/events/edit?id='.$event['id']); ?>" class="btn btn-warning btn-sm"><i class="far fa-edit"></i></a>
                                                                         <button type="button" class="btn btn-danger btn-sm aa-event-delete"><i class="far fa-trash-alt"></i></button>
                                                                     </td>
                         
@@ -1064,7 +1064,7 @@
                                                     <?php if ($pager) : ?>
                                                         <?php $pagi_path = 'events'; ?>
                                                         <?php $pager->setPath($pagi_path); ?>
-                                                        <?= $pager->links() ?>
+                                                        <?php echo $pager->links(); ?>
                                                     <?php endif ?>
                                                 </div>
                                             </div>
@@ -1089,7 +1089,7 @@
     <script src="/assets/js/bootstrap.bundle.js"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script>
-        var siteUrl = '<?= base_url() ?>';
+        var siteUrl = '<?php echo base_url(); ?>';
         $(document).ready(function(){
 
             $('.aa-event-delete').on('click', function(e){

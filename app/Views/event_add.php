@@ -1085,7 +1085,7 @@
                                     <h3>Create Event</h3>
                                 </div>
                                 <form action="<?= base_url() ?>/events/create" method="post" id="basicForm">
-                                    <?= csrf_field() ?>
+                                    <?php echo csrf_field(); ?>
                                     <div class="row" id="aa-error-msg">
 
                                     </div>

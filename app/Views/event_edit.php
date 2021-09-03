@@ -920,7 +920,7 @@
                         <div class="nk-content-inner">
                             <div class="nk-content-body">
                                 <form action="/events/edit?id=<?= $event['id'] ?>" method="post" class="d-block" id="myForm">
-                                    <?= csrf_field() ?>
+                                    <?php echo csrf_field(); ?>
                                     <?php if(isset($success) && $success == true): ?>
                                     <div class="alert alert-success" role="alert">
                                         event updated
