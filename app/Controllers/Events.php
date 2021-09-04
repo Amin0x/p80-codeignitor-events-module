@@ -104,6 +104,7 @@ class Events extends BaseController
             'meta' => $metasModel->findAll(),
             'ev_status' => $eventStatusModel->findAll(),
             'event_id' => 0,
+            'error' => [],           
         ];
 
         return view('event_add', $data);
@@ -113,17 +114,26 @@ class Events extends BaseController
     public function createEventAjax()
     {    
         $rules = [
-            'event_name' => [ 'lable' => 'Event Name', 'rules' => 'required'],
-            'description' => [ 'lable' => 'Description', 'rules' => 'required'],
-            'end_date' => [ 'lable' => 'End Date', 'rules' => 'required'],
-            'start_date' => [ 'lable' => 'Start Date', 'rules' => 'required'],
-            'manager_name' => [ 'lable' => 'Manger Name', 'rules' => 'required'],
-            'manager_email' => [ 'lable' => 'Manager Name', 'rules' => 'required|valid_email'],
+            'event_name' => ['rules' => 'required', 'errors' => ['required' => 'The Event Name field is required.']],
+            'description' => ['rules' => 'required' , 'errors' => ['required' => 'The Description field is required.']],
+            'end_date' => ['rules' => 'required' , 'errors' => ['required' => 'The Description field is required.']],
+            'start_date' => [ 'rules' => 'required' , 'errors' => ['required' => 'The Start Date field is required.']],
+            'manager_name' => ['rules' => 'required' , 'errors' => ['required' => 'The Manger Name field is required.']],
+            'manager_email' => ['rules' => 'required' , 'errors' => ['required' => 'The Manager Email field is required.']],
+            'enabled' => ['rules' => 'required' , 'errors' => ['required' => 'The Enabled field is required.']],
+            'category_id' => ['rules' => 'required' , 'errors' => ['required' => 'The Category field is required.']],
+            'classification_id' => ['rules' => 'required' , 'errors' => ['required' => 'The Classification field is required.']],
+            'connected_tech' => [ 'rules' => 'required' , 'errors' => ['required' => 'The Connected to tech field is required.']],
+            'staus_id' => ['rules' => 'required' , 'errors' => ['required' => 'The Staus field is required.']],
+            'location' => ['rules' => 'required' , 'errors' => ['required' => 'The Location field is required.']],
+            //'region' => ['rules' => 'required' , 'errors' => ['required' => 'The Region field is required.']],
+            'state' => ['rules' => 'required' , 'errors' => ['required' => 'The State field is required.']],
+            'city' => ['rules' => 'required' , 'errors' => ['required' => 'The City field is required.']],
         ];
 
 
         if (! $this->validate($rules)) {
-            return $this->response->setJSON(['success' => false, 'msg' => 'Error: Invalid Inputs',]);
+            return $this->response->setJSON(['success' => false, 'msg' => 'Error: Invalid Inputs', 'errors' => $this->validator->getErrors(),]);
         }
 
         $data = [
@@ -148,70 +158,84 @@ class Events extends BaseController
             'map_region' =>  $this->request->getVar('map_region'),           
         ];
         
-        $err = [];
-        $err_fields = [];
+        // $err = [];
+        // $err_fields = [];
 
-        if(trim($data['title']) == ''){
-            $err['title'] = 'you must inter title';
-            $err_fields[] = 'title';
-        }
+        // if(trim($data['title']) == ''){
+        //     $err['title'] = 'you must inter title';
+        //     $err_fields[] = 'title';
+        // }
 
-        if(trim($data['description']) == ''){
-            $err['description'] = 'you must inter description';
-            $err_fields[] = 'description';
-        }
-        if(trim($data['start_date']) == ''){
-            $err['start_date'] = 'you must inter description';
-            $err_fields[] = 'start_date';
-        }
-        if(trim($data['staus_id']) == ''){
-            $err['staus_id'] = 'you must inter description';
-            $err_fields[] = 'staus_id';
-        }
-        if(trim($data['category_id']) == ''){
-            $err['category_id'] = 'you must inter description';
-            $err_fields[] = 'category_id';
-        }
-        if(trim($data['classification_id']) == ''){
-            $err['classification_id'] = 'you must inter description';
-            $err_fields[] = 'classification_id';
-        }
-        if(trim($data['location']) == ''){
-            $err['location'] = 'you must inter description';
-            $err_fields[] = 'location';
-        }
-        if(trim($data['city']) == ''){
-            $err['city'] = 'you must inter description';
-            $err_fields[] = 'city';
-        }
-        if(trim($data['state']) == ''){
-            $err['state'] = 'you must inter description';
-            $err_fields[] = 'state';
-        }
+        // if(trim($data['description']) == ''){
+        //     $err['description'] = 'you must inter description';
+        //     $err_fields[] = 'description';
+        // }
+        // if(trim($data['start_date']) == ''){
+        //     $err['start_date'] = 'you must inter description';
+        //     $err_fields[] = 'start_date';
+        // }
+        // if(trim($data['staus_id']) == ''){
+        //     $err['staus_id'] = 'you must inter description';
+        //     $err_fields[] = 'staus_id';
+        // }
+        // if(trim($data['category_id']) == ''){
+        //     $err['category_id'] = 'you must inter description';
+        //     $err_fields[] = 'category_id';
+        // }
+        // if(trim($data['classification_id']) == ''){
+        //     $err['classification_id'] = 'you must inter description';
+        //     $err_fields[] = 'classification_id';
+        // }
+        // if(trim($data['location']) == ''){
+        //     $err['location'] = 'you must inter description';
+        //     $err_fields[] = 'location';
+        // }
+        // if(trim($data['city']) == ''){
+        //     $err['city'] = 'you must inter description';
+        //     $err_fields[] = 'city';
+        // }
+        // if(trim($data['state']) == ''){
+        //     $err['state'] = 'you must inter description';
+        //     $err_fields[] = 'state';
+        // }
 
         $model = new \App\Models\EventModel();
-       
         $id = $model->insert($data);
-
-
-        $data = [];
-
+        $result = [];
+        
         if($id){
-            $data['success'] = true;
-            $data['msg'] = "success";
-            $data['event_id'] = $id;
-
-            return $this->response->setJSON($data);
+            $result['success'] = true;
+            $result['msg'] = "success";
+            $result['event_id'] = $id;
+            
+            return $this->response->setJSON($result);
         }
         
+        // if(count($err) <= 0){
+            
+        //     $model = new \App\Models\EventModel();
+        //     $id = $model->insert($data);
+            
+        //     if($id){
+        //         $data['success'] = true;
+        //         $data['msg'] = "success";
+        //         $data['event_id'] = $id;
+        //         $data['error'] = $err;
+    
+        //         return $this->response->setJSON($data);
+        //     }
+        // }
+
+        $result['success'] = false;
+        $result['msg'] = "Bad Input Fields";
+        $result['event_id'] = $id;
+        $result['errors'] = [];
        
-        $data['success'] = false;
-        $data['msg'] = "Bad Input Fields";
-        $data['event_id'] = $id;
-        $data['error'] = $err;
-        $data['err_fields'] = $err_fields;
-        return $this->response->setJSON($data);
+        return $this->response->setJSON($result);
     }
+
+        
+       
 
     public function editEvent()
     {
