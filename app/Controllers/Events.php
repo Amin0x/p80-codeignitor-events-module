@@ -71,7 +71,7 @@ class Events extends BaseController
     public function viewEvent()
     {
 
-        $metasModel = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\KpisModel();
         $model = new \App\Models\EventModel();
         $id = $this->request->getVar('id');
         $event = $model->find($id);
@@ -94,7 +94,7 @@ class Events extends BaseController
     {
         $category = new \App\Models\EventCategoryModel();
         $classification = new \App\Models\EventClassificationModel();
-        $metasModel = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\KpisModel();
         $eventStatusModel = new \App\Models\EventStatusModel();
 
         $data = [
@@ -242,8 +242,8 @@ class Events extends BaseController
         $categoryModel = new \App\Models\EventCategoryModel();
         $eventClassificationModel = new \App\Models\EventClassificationModel();
         $eventStatusModel = new \App\Models\EventStatusModel();
-        $eventMetaModel = new \App\Models\EventMetaModel();
-        $metasModel = new \App\Models\MetasModel();
+        $eventMetaModel = new \App\Models\EventKpiModel();
+        $metasModel = new \App\Models\KpisModel();
         $eventModel = new \App\Models\EventModel();
         $id = $this->request->getVar('id');
         $data = [];
@@ -283,8 +283,8 @@ class Events extends BaseController
         $categoryModel = new \App\Models\EventCategoryModel();
         $eventClassificationModel = new \App\Models\EventClassificationModel();
         $eventStatusModel = new \App\Models\EventStatusModel();
-        $eventMetaModel = new \App\Models\EventMetaModel();
-        $metasModel = new \App\Models\MetasModel();
+        $eventMetaModel = new \App\Models\EventKpiModel();
+        $metasModel = new \App\Models\KpisModel();
         $eventModel = new \App\Models\EventModel();
         $id = $this->request->getVar('id');
         $data = [];
@@ -355,7 +355,7 @@ class Events extends BaseController
 
        
         return $this->response->setJSON([
-            'success' => $result ? true : false,
+            'success' => (bool)$result,
             'msg' => $result ? 'event deleted successfully' : 'error: cant delete event',
         ]);
        
@@ -377,7 +377,7 @@ class Events extends BaseController
     // }
 
     public function deleteOptionFromEventAjax(){
-        $eventMetaModel = new \App\Models\EventMetaModel();
+        $eventMetaModel = new \App\Models\EventKpiModel();
         $result = $eventMetaModel->delete($this->request->getVar('id'));
         if($result){
             return $this->response->setJSON([
@@ -402,7 +402,7 @@ class Events extends BaseController
             'user_id' => 'NULL',
         ];
 
-        $kips_model = new \App\Models\EventMetaModel();
+        $kips_model = new \App\Models\EventKpiModel();
         $kpi = $kips_model->where('kpi_id', $this->request->getVar('kpi_id'))->first();
         if ($kpi){
             $kpi['kpi_value'] =  $this->request->getVar('kpi_value');
@@ -428,7 +428,7 @@ class Events extends BaseController
 
     public function createOptionAjax()
     {    
-        $metasModel = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\KpisModel();
 
         $data = [
             'name' => $this->request->getPost('pki_name'),
@@ -440,17 +440,17 @@ class Events extends BaseController
         if($res){
 
             $db = \Config\Database::connect();
-            $sql = "SELECT metas.id, metas.name, pki_update_ref.name as update_name, pki_input_ref.name as input_name ";
-            $sql .= "FROM metas ";
-            $sql .= "JOIN pki_update_ref ON (metas.frequent_update = pki_update_ref.id) ";
-            $sql .= "JOIN pki_input_ref ON (metas.input_type = pki_input_ref.id) ";
-            $sql .= " WHERE metas.id = ".$res;
+            $sql = "SELECT kpis.id, kpis.name, kpi_update_ref.name as update_name, kpi_input_ref.name as input_name ";
+            $sql .= "FROM kpis ";
+            $sql .= "JOIN kpi_update_ref ON (kpis.frequent_update = kpi_update_ref.id) ";
+            $sql .= "JOIN kpi_input_ref ON (kpis.input_type = kpi_input_ref.id) ";
+            $sql .= " WHERE kpis.id = ".$res;
            
             $query = $db->query($sql);
             
 
             return $this->response->setJSON( [
-                'success' => $res != false? true: false,
+                'success' => (bool)$res,
                 'msg' => 'Option added successfully',
                 'option' => $query->getResultArray(),
             ]); 
@@ -466,15 +466,15 @@ class Events extends BaseController
     public function listOption()
     {    
         $db = \Config\Database::connect();
-        $kpis = $db->query("SELECT metas.id, metas.name, metas.frequent_update as frequent_update_id,
-         metas.input_type as input_type_id, pki_update_ref.name as update_type, pki_update_ref.name_ar as update_type_ar,
-         pki_input_ref.name as input_type, pki_input_ref.name_ar as input_type_ar
-        FROM metas
-        LEFT JOIN pki_update_ref ON (metas.frequent_update = pki_update_ref.id )
-        LEFT JOIN pki_input_ref ON (metas.input_type = pki_input_ref.id )");
+        $kpis = $db->query("SELECT kpis.id, kpis.name, kpis.frequent_update as frequent_update_id,
+         kpis.input_type as input_type_id, kpi_update_ref.name as update_type, kpi_update_ref.name_ar as update_type_ar,
+         kpi_input_ref.name as input_type, kpi_input_ref.name_ar as input_type_ar
+        FROM kpis
+        LEFT JOIN kpi_update_ref ON ( kpis.frequent_update = kpi_update_ref.id )
+        LEFT JOIN kpi_input_ref ON ( kpis.input_type = kpi_input_ref.id )");
         
-        $pki_input_ref = $db->query('SELECT * FROM pki_input_ref');
-        $pki_update_ref = $db->query('SELECT * FROM pki_update_ref');
+        $pki_input_ref = $db->query('SELECT * FROM kpi_input_ref');
+        $pki_update_ref = $db->query('SELECT * FROM kpi_update_ref');
         
         // $page = $this->request->getVar('page');
         
@@ -492,9 +492,54 @@ class Events extends BaseController
         return view('option_add_edit', $data);
     }
 
+    public function listOption2()
+    {
+        $id = $this->request->getGet('id');
+        $comm = $this->request->getGet('c');
+        if (!$id || $id <= 0){
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'bad req',
+            ]);
+        }
+
+        $option = new \App\Models\EventKpiModel();
+        $result = false;
+        $data = $this->request->getPost();
+        $err = '';
+
+        if ($comm == 'del'){
+            $result = $option->delete($id);
+        } elseif ($comm == 'upd' || $comm == 'add') {
+            $result = $option->save($data);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'msg' => 'bad req',
+            ]);
+        }
+
+
+        $kpis = $option->where('event_id', $id);
+        $db = \Config\Database::connect();
+        $pki_input_ref = $db->query('SELECT * FROM pki_input_ref');
+        $pki_update_ref = $db->query('SELECT * FROM pki_update_ref');
+
+
+        $data = [
+            'success' => (bool)$result,
+            'msg' => $err,
+            'pki_input_ref' => $pki_input_ref->getResult(),
+            'pki_update_ref' => $pki_update_ref->getResult(),
+            'event_kpis' => $kpis->findAll(),
+        ];
+
+        return $this->response->setJSON($data);
+    }
+
     public function updateOptionAjax()
     {    
-        $metasModel = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\KpisModel();
 
         $data = [
             'id' => $this->request->getVar('id'),
@@ -520,7 +565,7 @@ class Events extends BaseController
    
 
     public function deleteOptionAjax(){
-        $metasModel = new \App\Models\MetasModel();
+        $metasModel = new \App\Models\KpisModel();
 
         $data = $this->request->getVar('id');
             
@@ -579,6 +624,22 @@ class Events extends BaseController
        
     }
 
+    public function listKPI($id){
+        $option = new \App\Models\KpisModel();
+        $db = \Config\Database::connect();
+
+        $result = $option->select()->where('event_id', $id)->findAll();
+        $kpi_input_ref = $db->query('SELECT * FROM kpi_input_ref');
+        $kpi_update_ref = $db->query('SELECT * FROM kpi_update_ref');
+
+        $data = [
+            'kpis' => $result,
+            'kpi_update_ref' => $kpi_update_ref->getResultArray(),
+            'kpi_input_ref' => $kpi_input_ref->getResultArray(),
+        ];
+
+        return view('kpi_list.php', $data);
+    }
     
     public function test($var = null)
     {

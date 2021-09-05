@@ -1,9 +1,10 @@
 <?php include ('layout/layout_top.php')?>
 <div class="container">
-    <h3>Options (KPI's)</h3>
+    <h3>KPI's Added To ()</h3>
     <div class="row">
         <div class="col-12">
             <div class="aa-pki-list">
+
                 <table class="table" id="aaPKIList">
                     <thead>
                     <tr>
@@ -14,15 +15,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($event_kpis as $event_kpi): ?>
-                        <tr data-name="<?php echo $event_kpi->name; ?>" data-id="<?php echo $event_kpi->id; ?>"
-                            data-udpate-id="<?php echo $event_kpi->frequent_update_id; ?>"
-                            data-type-id="<?php echo $event_kpi->input_type_id; ?>">
-                            <td><?php echo $event_kpi->name; ?></td>
-                            <td><?php echo $event_kpi->update_type; ?></td>
-                            <td><?php echo $event_kpi->input_type; ?></td>
+                    <?php foreach ($kpis as $kpi): ?>
+                        <tr data-name="<?php echo $kpi['name']; ?>" data-id="<?php echo $kpi['id']; ?>"
+                            data-udpate-id="<?php echo $kpi['frequent_update']; ?>"
+                            data-type-id="<?php echo $kpi['input_type']; ?>">
+                            <td><?php echo $kpi['name']; ?></td>
+                            <td><?php echo $kpi['frequent_update']; ?></td>
+                            <td><?php echo $kpi['input_type']; ?></td>
 
                             <td>
+                                <button type="button" class="btn btn-outline-danger aa-delete-pki">Update/Add Values</button>
+                                <button type="button" class="btn btn-outline-danger aa-delete-pki">Edit</button>
                                 <button type="button" class="btn btn-outline-danger aa-delete-pki">Delete</button>
                             </td>
                         </tr>
@@ -30,6 +33,7 @@
 
                     </tbody>
                 </table>
+                <div class="text-center my-5 <?php echo count($kpis) <= 0? 'd-block':'d-none'; ?>"><strong>No Kpi Was Added to Event</strong></div>
             </div>
         </div>
         <div class="col-12">
@@ -38,7 +42,7 @@
                     <div class="aa-pki-msg"></div>
                     <div class="aa-pki-form">
                         <form id="myForm" method="POST">
-                            <div class="h4">Add New Option (KPI)</div>
+                            <div class="h4">Add New KPI To Event</div>
                             <div class="form-group">
                                 <label for="">Name</label>
                                 <input type="text" class="form-control" name="pki_name" placeholder="PKI Name">
@@ -46,16 +50,16 @@
                             <div class="form-group mt-0">
                                 <label for="">Updating Period</label>
                                 <select class="form-control" name="updating_period">
-                                    <?php foreach ($pki_update_ref as $kpi_ref): ?>
-                                        <option value="<?php echo $kpi_ref->id; ?>"><?php echo $kpi_ref->name . '  ' . $kpi_ref->name_ar; ?></option>
+                                    <?php foreach ($kpi_update_ref as $kpi_ref): ?>
+                                        <option value="<?php echo $kpi_ref['name']; ?>"><?php echo $kpi_ref['name'] . '  ' . $kpi_ref['name_ar']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group mt-0">
                                 <label for="">Input Type</label>
                                 <select class="form-control" name="input_type" id="" aria-describedby="helpId">
-                                    <?php foreach ($pki_input_ref as $input_ref): ?>
-                                        <option value="<?php echo $input_ref->id; ?>"><?php echo $input_ref->name . '  ' . $input_ref->name_ar; ?></option>
+                                    <?php foreach ($kpi_input_ref as $input_ref): ?>
+                                        <option value="<?php echo $input_ref['name']; ?>"><?php echo $input_ref['name'] . '  ' . $input_ref['name_ar']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -94,8 +98,8 @@
                                     <label for=""></label>
                                     <select class="form-control" name="updating_period" id="updatingPeriodModel"
                                             aria-describedby="helpId">
-                                        <?php foreach ($pki_update_ref as $kpi_ref): ?>
-                                            <option value="<?php echo $kpi_ref->id; ?>"><?php echo $kpi_ref->name . '  ' . $kpi_ref->name_ar; ?></option>
+                                        <?php foreach ($kpi_update_ref as $kpi_ref): ?>
+                                            <option value="<?php echo $kpi_ref['name'] ?>"><?php echo $kpi_ref['name'] . '  ' . $kpi_ref['name_ar']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -103,8 +107,8 @@
                                     <label for="">Input Type</label>
                                     <select class="form-control" name="input_type" id="inputTypeModel"
                                             aria-describedby="helpId">
-                                        <?php foreach ($pki_input_ref as $input_ref): ?>
-                                            <option value="<?php echo $input_ref->id; ?>"><?php echo $input_ref->name . '  ' . $input_ref->name_ar; ?></option>
+                                        <?php foreach ($kpi_input_ref as $input_ref): ?>
+                                            <option value="<?php echo $input_ref['name']; ?>"><?php echo $input_ref['name'] . '  ' . $input_ref['name_ar']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

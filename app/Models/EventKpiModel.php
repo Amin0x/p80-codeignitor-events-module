@@ -3,9 +3,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EventMetaModel extends Model
+class EventKpiModel extends Model
 {
-    protected $table = 'event_meta';
+    protected $table = 'event_kpi';
     protected $allowedFields  = [
         //'id',
         'event_id',

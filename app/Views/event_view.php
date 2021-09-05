@@ -10,9 +10,8 @@
                 <div class="d-flex justify-content-between">
                     <h5><?php echo $event['title']; ?></h5>
                     <div>
-                        <a href="#" class="btn btn-outline-light" role="button">Events KPIs</a>
-                        <a href="<?= base_url('events/edit?id=' . $event['id']) ?>" class="btn btn-outline-dark"
-                            role="button">Edit</a>
+                        <a href="<?php echo base_url('/events/'. $event['id'].'/kpi'); ?>" class="btn btn-outline-light" role="button">Events KPIs</a>
+                        <a href="<?php echo base_url('/events/edit?id=' . $event['id']); ?>" class="btn btn-outline-dark" role="button">Edit</a>
                     </div>
                 </div>
                 <p><strong>Description:</strong></p>
@@ -23,26 +22,7 @@
                 <p><strong>Connected To Technology:</strong> <?php echo $event['connected_tech'] ? 'Yes' : 'No'; ?></p>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <strong>Add Event Details (KPI)</strong>
-                <div id="aaOptionWarrper">
-                </div>
-                <div class="aa-kpi-wrapper d-flex" id="kpiWrapper">
-                    <select class="form-control" name="kpi_dump" id="kpi_dump"
-                            style="margin-right: .3rem;">
-                        <?php foreach ($meta as $val) : ?>
-                            <option value="<?php echo $val['id']; ?>"><?php echo $val['name']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <input type="text" class="form-control" name="kpi_dump_val" id="kpi_dump_val"
-                           placeholder="KPI Value" style="margin-left: .3rem;">
-                    <button type="button" class="btn btn-success" id="aaAddOption" style="margin-left: .6rem;"><i
-                                class="fas fa-angle-right"></i></button>
 
-                </div>
-            </div>
-        </div>
 
     </div>
 </div>

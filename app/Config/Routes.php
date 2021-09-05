@@ -44,11 +44,17 @@ $routes->get('events/create', 'Events::createEvent');
 $routes->post('events/create', 'Events::createEventAjax');
 $routes->post('events/address', 'Events::addAddressAjax');
 $routes->get('events/option', 'Events::listOption');
+$routes->post('events/option', 'Events::listOption2');
 $routes->post('events/option', 'Events::createOptionAjax');
 $routes->post('events/option/update', 'Events::updateOptionAjax');
 $routes->post('events/option/delete', 'Events::deleteOptionAjax');
 $routes->post('events/eventkpi/del', 'Events::deleteOptionFromEventAjax');
 $routes->post('events/eventkpi', 'Events::addOptionToEventAjax');
+$routes->get('events/(:num)/kpi', 'Events::listKPI/$1');
+//$routes->get('events/(:num)/kpi/(:num)', 'Events::addOptionToEventAjax');
+$routes->post('events/(:num)/kpi', 'Events::createKPI/$1');
+$routes->post('events/(:num)/kpi/(:num)/delete', 'Events::deleteKPI/$1/$2');
+$routes->post('events/(:num)/kpi/(:num)/update', 'Events::updateKPI/$1/$2');
 
 
 /*

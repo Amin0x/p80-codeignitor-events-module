@@ -3,14 +3,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MetasModel extends Model
+class KpisModel extends Model
 {
-    protected $table = 'metas';
+    protected $table = 'kpis';
     protected $allowedFields  = [
         //'id',
         'name',
         'frequent_update',
-        'input_type',        
+        'input_type',
+        'event_id'
     ];
     
 }
