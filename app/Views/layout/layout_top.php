@@ -27,7 +27,6 @@
     <link href='/assets/vendors/fullcalendar/lib/main.min.css' rel='stylesheet' />
     <script src="/assets/vendors/fullcalendar/lib/main.min.js"></script>
 </head>
-
 <body class="nk-body npc-default has-apps-sidebar has-sidebar ">
     <div class="nk-app-root">
         <div class="nk-apps-sidebar is-dark">

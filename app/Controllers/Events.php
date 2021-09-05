@@ -403,13 +403,18 @@ class Events extends BaseController
         ];
 
         $kips_model = new \App\Models\EventMetaModel();
-        $kpi = $kips_model->insert($data);
+        $kpi = $kips_model->where('kpi_id', $this->request->getVar('kpi_id'))->first();
+        if ($kpi){
+            $kpi['kpi_value'] =  $this->request->getVar('kpi_value');
+        }
+        $kpi = $kips_model->save($data);
 
         if( $kpi ){
+
             $resp = [
                 'success' => true,
                 'msg' => 'success',
-                'kpi' => $kips_model->find($kpi),
+                'kpi' => $kips_model->where('event_id', $data['event_id'])->findAll(),
             ];
             return $this->response->setJSON($resp);
         }

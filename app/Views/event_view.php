@@ -9,8 +9,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5><?php echo $event['title']; ?></h5>
-                    <a href="<?= base_url('events/edit?id=' . $event['id']) ?>" class="btn btn-outline-dark"
-                       role="button">Edit</a>
+                    <div>
+                        <a href="#" class="btn btn-outline-light" role="button">Events KPIs</a>
+                        <a href="<?= base_url('events/edit?id=' . $event['id']) ?>" class="btn btn-outline-dark"
+                            role="button">Edit</a>
+                    </div>
                 </div>
                 <p><strong>Description:</strong></p>
                 <p><?= $event['description'] ?></p>

@@ -15,7 +15,6 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-
             <div class="card">
                 <div class="card-body">
                     <h4>Basic</h4>
@@ -93,7 +92,7 @@
                     <div class="form-group mt-2">
                         <label for="status">Connected to tech</label>
                         <select type="text" class="form-control" name="connected_tech"
-                                data-sel-val="<?= $event['connected_tech'] ?>">
+                                data-sel-val="<?php echo $event['connected_tech']; ?>">
                             <option value="no">no</option>
                             <option value="yes">yes</option>
                         </select>
@@ -118,6 +117,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4>KPI</h4>
+                    <div id="aaOptionWarrper">
                     <?php if (isset($event_meta)): ?>
                         <?php foreach ($event_meta as $val): ?>
                             <div class="aa-kpi-row d-flex mb-2" data-kpi-id="<?= $val['id'] ?>">
@@ -130,7 +130,6 @@
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                    <div id="aaOptionWarrper">
                     </div>
                     <div class="aa-kpi-wrapper d-flex" id="kpiWrapper">
                         <select type="text" class="form-control" name="kpi_dump" id="kpi_dump"
@@ -240,15 +239,20 @@
                     method: "POST",
                     data: {kpi_id: name_val, kpi_value: val, event_id: eventId,},
                     success: function (data, textStatus) {
-                        if (data.success) {
+                        if (data.success && data.kpi.length > 0) {
+                            const  aow = $('#aaOptionWarrper');
+                            aow.empty();
+                            data.kpi.map((value, index)=>{
+                                var html = '<div class="aa-kpi-row d-flex mb-2" data-kpi-id="' + value.id + '">';
+                                html += '<input type="text" class="form-control" name="option_name[]" value="' + value.kpi_id + '" style="margin-right: .3rem;" disabled>';
+                                html += '<input type="text" class="form-control" name="option_val[]" value="' + value.kpi_value + '" style="margin-left: .3rem;" disabled>';
+                                html += '<button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;"><i class="fas fa-trash-alt"></i></button>';
+                                html += '</div>';
 
-                            var html = '<div class="aa-kpi-row d-flex mb-2" data-kpi-id="' + data.kpi.id + '">';
-                            html += '<input type="text" class="form-control" name="option_name[]" value="' + kpi_id + '" style="margin-right: .3rem;" disabled>';
-                            html += '<input type="text" class="form-control" name="option_val[]" value="' + val + '" style="margin-left: .3rem;" disabled>';
-                            html += '<button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;"><i class="fas fa-trash-alt"></i></button>';
-                            html += '</div>';
-                            var ele = $(html);
-                            $('#aaOptionWarrper').append(ele);
+                                const ele = $(html);
+                                aow.append(ele);
+                            });
+
 
                             var al = $('<div class="alert alert-success position-absolute" role="alert" style="z-index:9999;top:10px; left:50%;">KPI Saved Successfully...</div>');
                             $("body").append(al);
