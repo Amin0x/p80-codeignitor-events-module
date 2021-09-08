@@ -110,72 +110,8 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4>KPI</h4>
-                    <div id="aaOptionWarrper">
-                    <?php if (isset($event_meta)): ?>
-                        <?php foreach ($event_meta as $val): ?>
-                            <div class="aa-kpi-row d-flex mb-2" data-kpi-id="<?= $val['id'] ?>">
-                                <input type="text" class="form-control" name="option_name[]"
-                                       value="<?= $val['meta_name'] ?>" style="margin-right: .3rem;" disabled>
-                                <input type="text" class="form-control" name="option_val[]"
-                                       value="<?= $val['kpi_value'] ?>" style="margin-left: .3rem;" disabled>
-                                <button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;">
-                                    <i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    </div>
-                    <div class="aa-kpi-wrapper d-flex" id="kpiWrapper">
-                        <select type="text" class="form-control" name="kpi_dump" id="kpi_dump"
-                                style="margin-right: .3rem;">
-                            <?php foreach ($meta as $val) : ?>
-                                <option value="<?php echo $val['id']; ?>"><?php echo $val['name']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <input type="text" class="form-control" name="kpi_dump_val" id="kpi_dump_val"
-                               placeholder="KPI Value" style="margin-left: .3rem;">
-                        <button type="button" class="btn btn-success" id="aaAddOption" style="margin-left: .6rem;"><i
-                                    class="fas fa-angle-right"></i></button>
 
-                    </div>
-                </div>
-            </div>
-            <div class="card mt-2">
-                <div class="card-body">
-                    <h4>Location</h4>
-                    <div class="form-group">
-                        <label for="">Location</label>
-                        <input type="text" class="form-control" name="location" value="<?= $event['location'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="">State</label>
-                        <input type="text" class="form-control" name="state" value="<?= $event['state'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="">City</label>
-                        <input type="text" class="form-control" name="city" value="<?= $event['city'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Latitude</label>
-                        <input type="text" class="form-control" name="latitude" value="<?= $event['latitude'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Longitude</label>
-                        <input type="text" class="form-control" name="longitude" value="<?= $event['longitude'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Map Region (polygon)</label>
-                        <input type="text" class="form-control" name="map_region" value="<?= $event['map_region'] ?>">
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="col-12 mt-2">
             <button type="submit" class="btn btn-success">Send</button>
         </div>
@@ -185,97 +121,16 @@
 
 <script>
     var baseUrl = '<?= base_url() ?>';
-    var eventId = '<?= $event['id'] ?>';
+
 
     $(document).ready(function () {
 
         $('#startDate').datetimepicker();
         $('#endDate').datetimepicker();
 
-        $(document).on('click', '.aa-remove-kpi', function (e) {
-            var ele = $(this).closest('.aa-kpi-row');
-            var id = ele.attr('data-kpi-id');
-
-            $.ajax({
-                url: baseUrl + '/events/eventkpi/del',
-                method: "POST",
-                data: {id: id,},
-                success: function (data, textStatus) {
-                    if (data.success) {
-
-                        ele.remove();
-
-                        var al = $('<div class="alert alert-success position-absolute" role="alert" style="z-index:9999;top:10px; left:50%;">KPI Deleted Successfully...</div>');
-                        $("body").append(al);
-                        setTimeout(() => {
-                            al.remove();
-                        }, 3000);
-
-                    } else {
-                        var al = $('<div class="alert alert-danger position-absolute" role="alert" style="z-index:9999;top:10px; left:50%;">Error: something went wrong..</div>');
-                        $("body").append(al);
-                        setTimeout(() => {
-                            al.remove();
-                        }, 3000);
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                }
-            });
-        });
-
-        $(document).on('click', '#aaAddOption', function (e) {
-            var kpi_id = $('#kpi_dump').find(":selected").text();
-            var name_val = $('#kpi_dump').find(":selected").val();
-            var val = $('#kpi_dump_val').val();
-
-            if (val != '') {
 
 
-                $.ajax({
-                    url: baseUrl + '/events/eventkpi',
-                    method: "POST",
-                    data: {kpi_id: name_val, kpi_value: val, event_id: eventId,},
-                    success: function (data, textStatus) {
-                        if (data.success && data.kpi.length > 0) {
-                            const  aow = $('#aaOptionWarrper');
-                            aow.empty();
-                            data.kpi.map((value, index)=>{
-                                var html = '<div class="aa-kpi-row d-flex mb-2" data-kpi-id="' + value.id + '">';
-                                html += '<input type="text" class="form-control" name="option_name[]" value="' + value.kpi_id + '" style="margin-right: .3rem;" disabled>';
-                                html += '<input type="text" class="form-control" name="option_val[]" value="' + value.kpi_value + '" style="margin-left: .3rem;" disabled>';
-                                html += '<button type="button" class="btn btn-danger aa-remove-kpi" style="margin-left: .6rem;"><i class="fas fa-trash-alt"></i></button>';
-                                html += '</div>';
 
-                                const ele = $(html);
-                                aow.append(ele);
-                            });
-
-
-                            var al = $('<div class="alert alert-success position-absolute" role="alert" style="z-index:9999;top:10px; left:50%;">KPI Saved Successfully...</div>');
-                            $("body").append(al);
-                            setTimeout(() => {
-                                al.remove();
-                            }, 3000);
-
-                        } else {
-                            var al = $('<div class="alert alert-success position-absolute" role="alert" style="z-index:9999;top:10px; left:50%;">' + data.msg + '</div>');
-                            $("body").append(al);
-                            setTimeout(() => {
-                                al.remove();
-                            }, 3000);
-                        }
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-
-                    }
-                });
-
-            }
-        });
 
         // var start = $('#startDate').attr('data-sel-val');
         // document.getElementById('endDate').valueAsDate = start;

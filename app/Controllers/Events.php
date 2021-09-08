@@ -1,9 +1,18 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\EventCategoryModel;
+use App\Models\EventClassificationModel;
+use App\Models\EventKpiModel;
+use App\Models\EventModel;
+use App\Models\EventStatusModel;
+use App\Models\KpisModel;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Model;
 use Config\App;
+use Config\Database;
+use function PHPUnit\Framework\isEmpty;
 
 class Events extends BaseController
 {
@@ -16,10 +25,10 @@ class Events extends BaseController
 	public function index()
 	{
 		
-        $model = new \App\Models\EventModel();
-        $eventCategoryModel = new \App\Models\EventCategoryModel();
-        $eventClassificationModel = new \App\Models\EventClassificationModel();
-        $eventStatusModel = new \App\Models\EventStatusModel();
+        $model = new EventModel();
+        $eventCategoryModel = new EventCategoryModel();
+        $eventClassificationModel = new EventClassificationModel();
+        $eventStatusModel = new EventStatusModel();
 
         $model->select('`events`.*, event_category.name as category_name, event_classification.name as classification, event_status.status_name as status_name');
         $model->join('event_category', 'event_category.id = `events`.category_id');
@@ -68,34 +77,37 @@ class Events extends BaseController
         return view('event_list', $data);
 	}
 
-    public function viewEvent()
+    public function viewEvent($id = false)
     {
-
-        $metasModel = new \App\Models\KpisModel();
-        $model = new \App\Models\EventModel();
+        $kipsModel = new KpisModel();
+        $model = new EventModel();
+        $db = Database::connect();
         $id = $this->request->getVar('id');
         $event = $model->find($id);
 
+        $kpi_update_ref = $db->query("select * from kpi_update_ref")->getResultArray();
+        $kpi_input_ref = $db->query("select * from kpi_input_ref")->getResultArray();
+
         if (!$event) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw PageNotFoundException::forPageNotFound();
         }
         $data = [
             'page_title' => 'Events',
-            'meta' => $metasModel->findAll(),
+            'event_kips' => $kipsModel->findAll(),
             'event' => $event,
+            'kpi_update_ref' => $kpi_update_ref,
+            'kpi_input_ref' => $kpi_input_ref,
         ];
 
         return view('event_view', $data);
     }
 
-    
-
     public function createEvent()
     {
-        $category = new \App\Models\EventCategoryModel();
-        $classification = new \App\Models\EventClassificationModel();
-        $metasModel = new \App\Models\KpisModel();
-        $eventStatusModel = new \App\Models\EventStatusModel();
+        $category = new EventCategoryModel();
+        $classification = new EventClassificationModel();
+        $metasModel = new KpisModel();
+        $eventStatusModel = new EventStatusModel();
 
         $data = [
             'page_title' => 'Events - create new event',
@@ -158,48 +170,7 @@ class Events extends BaseController
             'map_region' =>  $this->request->getVar('map_region'),           
         ];
         
-        // $err = [];
-        // $err_fields = [];
-
-        // if(trim($data['title']) == ''){
-        //     $err['title'] = 'you must inter title';
-        //     $err_fields[] = 'title';
-        // }
-
-        // if(trim($data['description']) == ''){
-        //     $err['description'] = 'you must inter description';
-        //     $err_fields[] = 'description';
-        // }
-        // if(trim($data['start_date']) == ''){
-        //     $err['start_date'] = 'you must inter description';
-        //     $err_fields[] = 'start_date';
-        // }
-        // if(trim($data['staus_id']) == ''){
-        //     $err['staus_id'] = 'you must inter description';
-        //     $err_fields[] = 'staus_id';
-        // }
-        // if(trim($data['category_id']) == ''){
-        //     $err['category_id'] = 'you must inter description';
-        //     $err_fields[] = 'category_id';
-        // }
-        // if(trim($data['classification_id']) == ''){
-        //     $err['classification_id'] = 'you must inter description';
-        //     $err_fields[] = 'classification_id';
-        // }
-        // if(trim($data['location']) == ''){
-        //     $err['location'] = 'you must inter description';
-        //     $err_fields[] = 'location';
-        // }
-        // if(trim($data['city']) == ''){
-        //     $err['city'] = 'you must inter description';
-        //     $err_fields[] = 'city';
-        // }
-        // if(trim($data['state']) == ''){
-        //     $err['state'] = 'you must inter description';
-        //     $err_fields[] = 'state';
-        // }
-
-        $model = new \App\Models\EventModel();
+        $model = new EventModel();
         $id = $model->insert($data);
         $result = [];
         
@@ -211,21 +182,7 @@ class Events extends BaseController
             return $this->response->setJSON($result);
         }
         
-        // if(count($err) <= 0){
-            
-        //     $model = new \App\Models\EventModel();
-        //     $id = $model->insert($data);
-            
-        //     if($id){
-        //         $data['success'] = true;
-        //         $data['msg'] = "success";
-        //         $data['event_id'] = $id;
-        //         $data['error'] = $err;
-    
-        //         return $this->response->setJSON($data);
-        //     }
-        // }
-
+        
         $result['success'] = false;
         $result['msg'] = "Bad Input Fields";
         $result['event_id'] = $id;
@@ -239,17 +196,17 @@ class Events extends BaseController
 
     public function editEvent()
     {
-        $categoryModel = new \App\Models\EventCategoryModel();
-        $eventClassificationModel = new \App\Models\EventClassificationModel();
-        $eventStatusModel = new \App\Models\EventStatusModel();
-        $eventMetaModel = new \App\Models\EventKpiModel();
-        $metasModel = new \App\Models\KpisModel();
-        $eventModel = new \App\Models\EventModel();
+        $categoryModel = new EventCategoryModel();
+        $eventClassificationModel = new EventClassificationModel();
+        $eventStatusModel = new EventStatusModel();
+        $eventMetaModel = new EventKpiModel();
+        $metasModel = new KpisModel();
+        $eventModel = new EventModel();
         $id = $this->request->getVar('id');
         $data = [];
 
         if(!$id){
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw PageNotFoundException::forPageNotFound();
         }
 
         $event = $eventModel->find($id);
@@ -271,7 +228,7 @@ class Events extends BaseController
             ];
 
         } else {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw PageNotFoundException::forPageNotFound();
         }
 
         return view('event_edit', $data);
@@ -280,17 +237,17 @@ class Events extends BaseController
     public function updateEvent()
     {
         
-        $categoryModel = new \App\Models\EventCategoryModel();
-        $eventClassificationModel = new \App\Models\EventClassificationModel();
-        $eventStatusModel = new \App\Models\EventStatusModel();
-        $eventMetaModel = new \App\Models\EventKpiModel();
-        $metasModel = new \App\Models\KpisModel();
-        $eventModel = new \App\Models\EventModel();
+        $categoryModel = new EventCategoryModel();
+        $eventClassificationModel = new EventClassificationModel();
+        $eventStatusModel = new EventStatusModel();
+        $eventMetaModel = new EventKpiModel();
+        $metasModel = new KpisModel();
+        $eventModel = new EventModel();
         $id = $this->request->getVar('id');
         $data = [];
 
         if( !isset($id) || $id <= 0){
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw PageNotFoundException::forPageNotFound();
         }
         
 
@@ -340,7 +297,7 @@ class Events extends BaseController
             'meta' => $metasModel->findAll(),
             'ev_status' => $eventStatusModel->findAll(),
             'event_id' => 0,
-            'success' => $result ? true : false,
+            'success' => (bool)$result,
             'msg' => $result ? 'event saved successfully' : 'error: cant save event',
         ];
 
@@ -350,7 +307,7 @@ class Events extends BaseController
     public function deleteEventAjax()
     {
         $id = $this->request->getVar('id');
-        $eventModel = new \App\Models\EventModel();
+        $eventModel = new EventModel();
         $result = $eventModel->delete($id);
 
        
@@ -377,7 +334,7 @@ class Events extends BaseController
     // }
 
     public function deleteOptionFromEventAjax(){
-        $eventMetaModel = new \App\Models\EventKpiModel();
+        $eventMetaModel = new EventKpiModel();
         $result = $eventMetaModel->delete($this->request->getVar('id'));
         if($result){
             return $this->response->setJSON([
@@ -392,43 +349,9 @@ class Events extends BaseController
         ]);
     }
 
-    public function addOptionToEventAjax(){
-        
-        $data = [
-            'event_id' => $this->request->getVar('event_id'),
-            'kpi_id' => $this->request->getVar('kpi_id'),
-            'kpi_value' => $this->request->getVar('kpi_value'),
-            'update_date' => date('d m Y H:i:s'),
-            'user_id' => 'NULL',
-        ];
-
-        $kips_model = new \App\Models\EventKpiModel();
-        $kpi = $kips_model->where('kpi_id', $this->request->getVar('kpi_id'))->first();
-        if ($kpi){
-            $kpi['kpi_value'] =  $this->request->getVar('kpi_value');
-        }
-        $kpi = $kips_model->save($data);
-
-        if( $kpi ){
-
-            $resp = [
-                'success' => true,
-                'msg' => 'success',
-                'kpi' => $kips_model->where('event_id', $data['event_id'])->findAll(),
-            ];
-            return $this->response->setJSON($resp);
-        }
-        
-        $resp = [
-            'success' => false,
-            'msg' => 'error',               
-        ];
-        return $this->response->setJSON($resp);
-    }
-
     public function createOptionAjax()
     {    
-        $metasModel = new \App\Models\KpisModel();
+        $metasModel = new KpisModel();
 
         $data = [
             'name' => $this->request->getPost('pki_name'),
@@ -439,7 +362,7 @@ class Events extends BaseController
         $res = $metasModel->insert($data);
         if($res){
 
-            $db = \Config\Database::connect();
+            $db = Database::connect();
             $sql = "SELECT kpis.id, kpis.name, kpi_update_ref.name as update_name, kpi_input_ref.name as input_name ";
             $sql .= "FROM kpis ";
             $sql .= "JOIN kpi_update_ref ON (kpis.frequent_update = kpi_update_ref.id) ";
@@ -465,7 +388,7 @@ class Events extends BaseController
 
     public function listOption()
     {    
-        $db = \Config\Database::connect();
+        $db = Database::connect();
         $kpis = $db->query("SELECT kpis.id, kpis.name, kpis.frequent_update as frequent_update_id,
          kpis.input_type as input_type_id, kpi_update_ref.name as update_type, kpi_update_ref.name_ar as update_type_ar,
          kpi_input_ref.name as input_type, kpi_input_ref.name_ar as input_type_ar
@@ -503,7 +426,7 @@ class Events extends BaseController
             ]);
         }
 
-        $option = new \App\Models\EventKpiModel();
+        $option = new EventKpiModel();
         $result = false;
         $data = $this->request->getPost();
         $err = '';
@@ -521,7 +444,7 @@ class Events extends BaseController
 
 
         $kpis = $option->where('event_id', $id);
-        $db = \Config\Database::connect();
+        $db = Database::connect();
         $pki_input_ref = $db->query('SELECT * FROM pki_input_ref');
         $pki_update_ref = $db->query('SELECT * FROM pki_update_ref');
 
@@ -537,35 +460,8 @@ class Events extends BaseController
         return $this->response->setJSON($data);
     }
 
-    public function updateOptionAjax()
-    {    
-        $metasModel = new \App\Models\KpisModel();
-
-        $data = [
-            'id' => $this->request->getVar('id'),
-            'name' => $this->request->getVar('name'),
-            'frequent_update' => $this->request->getVar('frequent_update'),
-            'input_type' => $this->request->getVar('input_type'),
-        ];
-
-        if($metasModel->update($data)){
-            return $this->response->setJSON([
-                'success' => true,
-                'msg' => 'updated successfully',
-                'option' => $metasModel->find($data['id']),
-            ]); 
-        }
-
-        return $this->response->setJSON([
-            'success' => false,
-            'msg' => 'error cant update the option',
-        ]); 
-       
-    }
-   
-
     public function deleteOptionAjax(){
-        $metasModel = new \App\Models\KpisModel();
+        $metasModel = new KpisModel();
 
         $data = $this->request->getVar('id');
             
@@ -594,7 +490,7 @@ class Events extends BaseController
     public function calenderAjax()
     {
         
-        $model = new \App\Models\EventModel();
+        $model = new EventModel();
         $model->select('id, title, end_date, start_date');
         if ($this->request->getGet('start')) {
             $model->where('start_date >=', $this->request->getGet('start'));
@@ -624,23 +520,138 @@ class Events extends BaseController
        
     }
 
-    public function listKPI($id){
-        $option = new \App\Models\KpisModel();
-        $db = \Config\Database::connect();
+    public function listKPIValueUpdates($id, $kpiId){
+        $eventKpiModel = new EventKpiModel();
+        $kpisModel = new KpisModel();
+        $eventModel = new EventModel();
+        $db = Database::connect();
 
-        $result = $option->select()->where('event_id', $id)->findAll();
+        $event = $eventModel->find($id);
+        $kpi = $kpisModel->find($kpiId);
+        $eventKpis = $eventKpiModel->select()->where('kpi_id', $kpiId)->findAll();
         $kpi_input_ref = $db->query('SELECT * FROM kpi_input_ref');
         $kpi_update_ref = $db->query('SELECT * FROM kpi_update_ref');
 
+        if($event == null || $kpi == null){
+            //404
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+
+
         $data = [
-            'kpis' => $result,
+            'kpi' => $kpi,
+            'event_kpis' => $eventKpis,
             'kpi_update_ref' => $kpi_update_ref->getResultArray(),
             'kpi_input_ref' => $kpi_input_ref->getResultArray(),
+            'event' => $event,
         ];
 
-        return view('kpi_list.php', $data);
+        return view('kpi_update.php', $data);
     }
-    
+
+    public function createKPI($id){
+        $option = new KpisModel();
+
+        $result = $this->validate([
+            'name' => 'required',
+        ]);
+
+        if (!$result){
+            $data = [
+                'success' => false,
+                'msg' => 'error cant create kpi, Bad input',
+            ];
+
+            return $this->response->setJSON($data);
+        }
+        $result = $option->save($this->request->getPost());
+
+        if ($result){
+
+            $option->select()->where('event_id', $id);
+            $data = [
+                'kpi' => $option->findAll(),
+                'success' => true,
+                'msg' => 'success',
+            ];
+
+            return $this->response->setJSON($data);
+        }
+
+        $data = [
+            'success' => false,
+            'msg' => 'error cant create kpi',
+        ];
+
+        return $this->response->setJSON($data);
+    }
+
+    public function deleteKPI($id, $kpi_id){
+        $kpi = new KpisModel();
+        $result = $kpi->delete($this->request->getVar('id'));
+
+        if ($result){
+            $data = [
+                'success' => true,
+                'msg' => 'success',
+            ];
+
+            return $this->response->setJSON($data);
+        }
+
+        $data = [
+            'success' => false,
+            'msg' => 'error cant delete kpi',
+        ];
+
+        return $this->response->setJSON($data);
+    }
+
+    public function updateKPI($id, $kpiId){
+        $eventKpi = new EventKpiModel();
+
+        $result = $this->validate([
+            'event_id' => 'required',
+            'kpi_id' => 'required',
+            'kpi_value' => 'required',
+        ]);
+
+        if (!$result){
+            $data = [
+                'success' => false,
+                'msg' => 'error cant update the KPI Value, bad input value',
+            ];
+
+            return $this->response->setJSON($data);
+        }
+
+        $data = [
+            'event_id' => $this->request->getVar('event_id'),
+            'kpi_id' => $this->request->getVar('kpi_id'),
+            'kpi_value' => $this->request->getVar('kpi_value'),
+            'user_id' => '',
+        ];
+
+        $result = $eventKpi->insert($data);
+
+        if ($result){
+            $data = [
+                'success' => true,
+                'msg' => 'success',
+            ];
+
+            return $this->response->setJSON($data);
+        }
+
+        $data = [
+            'success' => false,
+            'msg' => 'error cant update the KPI Value',
+        ];
+
+        return $this->response->setJSON($data);
+    }
+
     public function test($var = null)
     {
         # code...
